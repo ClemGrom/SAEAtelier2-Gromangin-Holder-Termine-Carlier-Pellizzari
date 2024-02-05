@@ -1,0 +1,50 @@
+version: '3.8'
+networks:
+  geoquiz-network:
+    driver: bridge
+
+services:
+  geoquiz-auth_service:
+    image: canals/php:8.2
+    container_name: auth_service
+    volumes:
+      - ./geoquiz.auth_api:/var/www
+      - ./geoquiz.auth_api/public:/var/www/html
+    ports:
+      - "50020:80"
+    environment:
+      - APP_ENV=local
+    restart: always
+    depends_on:
+      - geoquiz-auth_db
+    networks:
+      - geoquiz-network
+
+  geoquiz-auth_db:
+    image: mariadb:latest
+    container_name: auth_db
+    environment:
+      MYSQL_DATABASE: auth_db
+      MYSQL_ROOT_PASSWORD: PierreAndreGuenego
+      MYSQL_USER: root
+      MYSQL_PASSWORD: PierreAndreGuenego
+    ports:
+      - "50019:3306"
+    restart: always
+    networks:
+      - geoquiz-network
+
+  geoquiz-front_interface:
+    image: node:20-alpine
+    ports:
+      - "50001:3000"
+    volumes:
+      - ./geoquiz.front_interface:/app
+    working_dir: /app
+    command: sh -c "npm install && npm start"
+    networks:
+      - geoquiz-network
+    environment:
+      - NODE_ENV=production
+#    depends_on:
+#      - geoquiz-auth_service
