@@ -27,6 +27,7 @@
     <div class="game-principles">
       <GamePrinciples />
     </div>
+    <RouterLink to="/jeu" class="cta-button">Jouer</RouterLink>
   </div>
 </body>
 </template>
