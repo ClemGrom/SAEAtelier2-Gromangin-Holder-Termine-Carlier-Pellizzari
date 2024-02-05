@@ -46,5 +46,5 @@ services:
       - geoquiz-network
     environment:
       - NODE_ENV=production
-#    depends_on:
-#      - geoquiz-auth_service
+    depends_on:
+      - geoquiz-auth_service
