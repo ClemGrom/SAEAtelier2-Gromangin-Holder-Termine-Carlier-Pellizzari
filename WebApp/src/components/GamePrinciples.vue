@@ -1,7 +1,8 @@
 <template>
   <div>
-    <h2 class="section-title">Principe et règles du jeu</h2>
-
+    <div class="game">
+          <h2 class="section-title">Principe et règles du jeu</h2>
+  
     <p class="game-description">
       GeoQuizz est un jeu captivant où votre tâche est de placer avec précision des photos sur une carte de votre ville, plus rapidement que les autres joueurs. Voici comment le jeu fonctionne :
     </p>
@@ -13,7 +14,9 @@
       <li>L'objectif est d'obtenir le maximum de points au cours d'une partie de 10 photos.</li>
       <li>La partie se termine une fois que toutes les 10 photos ont été positionnées.</li>
     </ul>
+  </div>
 
+  <div class="scoring">
     <h3 class="scoring-title">Règles de calcul des points :</h3>
     <ul class="scoring-rules">
       <li>Pour une réponse placée à une distance inférieure à D : 5 points.</li>
@@ -24,6 +27,7 @@
       <li>Aucun point n'est acquis pour une réponse en plus de 20 secondes.</li>
     </ul>
   </div>
+  </div>
 </template>
 
 <script>
@@ -33,16 +37,34 @@ export default {
 </script>
 
 <style scoped>
+div{
+  display: grid;
+  grid-template-columns: 12 1fr 1fr;
+  grid-gap: 20px;
+  color: black;
+  
+}
+.game{
+  grid-column: 1/5;
+  background-color: white;
+  padding: 20px;
+  border-radius: 20px;
+}
+.scoring{
+  grid-column: 5/13;
+  background-color: white;
+  padding: 20px;
+  border-radius: 20px;
+}
 .game-description {
   font-size: 16px;
-  color: #333;
-  margin-bottom: 15px;
+ 
 }
 
 .section-title {
   font-size: 24px;
   color: black;
-  margin-bottom: 10px;
+
   font-weight: bold;
   text-decoration: underline;
 
@@ -50,23 +72,21 @@ export default {
 
 .game-rules {
   font-size: 14px;
-  color: #555;
-  list-style-type: disc;
+ 
   margin-left: 20px;
+  list-style: none;
 }
 
 .scoring-title {
   font-size: 20px;
-  color: #e74c3c;
-  margin-top: 20px;
-  margin-bottom: 10px;
+  
+ 
   text-decoration: underline;
 }
 
 .scoring-rules {
   font-size: 14px;
-  color: #e74c3c;
-  list-style-type: disc;
-  margin-left: 20px;
+
+  list-style: none;
 }
 </style>

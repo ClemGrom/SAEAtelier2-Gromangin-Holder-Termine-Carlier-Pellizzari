@@ -1,28 +1,34 @@
 <template>
+  <body>
+
+  
   <div class="home-container">
-    <div class="header">
-      <h1 class="main-title">GeoQuizz</h1>
-      <div class="user-actions">
-        <router-link to="/register" class="cta-button">pas encore inscrit ?</router-link>
-        <router-link to="/login" class="cta-button">Se connecter</router-link>
-      </div>
-    </div>
-    <div class="logo-actions">
+    <nav>
       <img src="@/assets/game_logo.jpg" alt="Game Logo" class="game-logo" />
-      <div class="extra-actions">
-        <router-link to="/profile" class="cta-button">consulter mon profil</router-link>
-        <router-link to="/create-game" class="cta-button">Créer une partie !</router-link>
+      <h1 class="main-title">GeoQuizz</h1>
+      
+      <div class="user-actions">
+        <router-link to="/register" class="cta-button">Inscription</router-link>
+        <router-link to="/login" class="cta-button">Connection</router-link>
+        <router-link to="/profile" ><img src="@/assets/utilisateur.png" alt="logo utilisateur" class="logo-utilisateur"></router-link>
       </div>
-    </div>
+
+    </nav>
+   
     <div class="game-intro">
       <p class="game-intro-text">
         Bienvenue dans GeoQuizz, le jeu captivant où vous devez placer avec précision des photos sur la carte de votre ville plus rapidement que les autres joueurs. Prêt pour l'aventure ?
       </p>
     </div>
+    <div class="extra-actions">
+        
+        <router-link to="/create-game" class="cta-button">Créer une partie !</router-link>
+      </div>
     <div class="game-principles">
       <GamePrinciples />
     </div>
   </div>
+</body>
 </template>
 
 <script>
@@ -36,27 +42,45 @@ export default {
 </script>
 
 <style scoped>
+body{
+  font-family: Arial, sans-serif;
+  background-color: #2c3e50;
+}
+
 .home-container {
   text-align: center;
-  background-color: #2c3e50;
+  background-color: #22364B;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   color: #ecf0f1;
 }
+nav{
+  display: inline-block;
+}
 
+img{
+  width: 20px;
+  height: 20px;
+}
+
+.logo-utilisateur{
+  width: 40px;
+  height: 40px;
+  
+}
 .header {
-  display: flex;
-  justify-content: space-between;
+  display: inline-block;
   align-items: center;
-  margin-bottom: 20px;
+  margin :20px;
 }
 
 .main-title {
   font-size: 48px;
-  color: #e74c3c;
+  
   margin-bottom: 20px;
   font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .user-actions {
@@ -81,7 +105,7 @@ export default {
   padding: 10px 20px;
   font-size: 16px;
   color: #ecf0f1;
-  background-color: #3498db;
+  background-color: #4AC78D;
   border: none;
   border-radius: 5px;
   text-decoration: none;
@@ -98,9 +122,9 @@ export default {
 }
 
 .game-logo {
-  width: 150px;
-  height: 150px;
-  margin-bottom: 30px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
 }
 
 .game-intro-text {
@@ -109,10 +133,10 @@ export default {
 }
 
 .game-principles {
-  background-color: #ffffff;
+  
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  
 }
 </style>
 
