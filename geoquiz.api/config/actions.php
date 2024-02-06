@@ -4,6 +4,7 @@ use geoquiz\api\app\action\DifficultiesListAction;
 use geoquiz\api\app\action\GameCreateAction;
 use geoquiz\api\app\action\GameDetailsAction;
 use geoquiz\api\app\action\GameSubmitAction;
+use geoquiz\api\app\action\UserGamesListAction;
 use Psr\Container\ContainerInterface;
 
 return [
@@ -22,6 +23,10 @@ return [
 
     GameSubmitAction::class => function (ContainerInterface $container) {
         return new GameSubmitAction($container->get('game.service'));
+    },
+
+    UserGamesListAction::class => function (ContainerInterface $container) {
+        return new UserGamesListAction($container->get('game.service'));
     },
 
 ];

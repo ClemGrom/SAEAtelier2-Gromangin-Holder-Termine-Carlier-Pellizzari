@@ -2,14 +2,35 @@
 
 namespace geoquiz\api\app\action;
 
+use geoquiz\api\domain\service\GameServiceInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Routing\RouteContext;
 
 class UserGamesListAction extends Action
 {
+    private GameServiceInterface $gameService;
 
-    function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args)
+    public function __construct(GameServiceInterface $gameService)
     {
-        // TODO: Implement __invoke() method.
+        $this->gameService = $gameService;
+    }
+
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args)
+    {
+        $userId = $args['userId'];
+        $games = $this->gameService->getUserGames($userId);
+
+        $responseJson = [
+            'type' => 'collection',
+            'games' => $games,
+            'links' => [
+                'self' => RouteContext::fromRequest($request)->getRouteParser()->urlFor('user_games_list', ['userId' => $userId])
+            ]
+        ];
+
+        $response->getBody()->write(json_encode($responseJson));
+        return $response->withHeader('Content-Type', 'application/json');
+
     }
 }

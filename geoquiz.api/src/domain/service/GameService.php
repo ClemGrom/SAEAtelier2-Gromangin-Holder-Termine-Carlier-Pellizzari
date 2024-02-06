@@ -70,4 +70,12 @@ class GameService implements GameServiceInterface
         return $game->toDTO();
     }
 
+    public function getUserGames(string $userId): array
+    {
+        $this->logger->info('Getting user games');
+        return Users::findOrFail($userId)->games->map(function ($game) {
+            return $game->toDTO();
+        })->toArray();
+    }
+
 }

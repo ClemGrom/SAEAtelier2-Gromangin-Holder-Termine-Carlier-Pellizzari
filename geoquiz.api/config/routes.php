@@ -6,6 +6,7 @@ use geoquiz\api\app\action\GameCreateAction;
 use geoquiz\api\app\action\GameDetailsAction;
 use geoquiz\api\app\action\GameSubmitAction;
 use geoquiz\api\app\action\UserGamesListAction;
+use geoquiz\api\app\action\UserProfileAction;
 
 use Slim\App;
 
@@ -16,35 +17,44 @@ return function( App $app):void {
     });
     $app->group('/api', function($app) {
 
-        // Route pour récupérer les difficultés disponibles
-        $app->get('/difficulties[/]', DifficultiesListAction::class)->setName('difficulties_list');
+        $app->group('', function ($app) {
 
-        $app->group('/games', function($app) {
+            // Route pour récupérer les difficultés disponibles
+            $app->get('/difficulties[/]', DifficultiesListAction::class)->setName('difficulties_list');
 
-            // Route pour créer une nouvelle partie
-            $app->post('[/]', GameCreateAction::class)->setName('game_create');
+            $app->group('/games', function ($app) {
 
-            $app->group('/{gameId}', function($app) {
+                // Route pour créer une nouvelle partie
+                $app->post('[/]', GameCreateAction::class)->setName('game_create');
 
-                // Route pour récupérer les détails d'une partie spécifique (statut, score, etc.)
-                $app->get('[/]', GameDetailsAction::class)->setName('game_details');
+                $app->group('/{gameId}', function ($app) {
 
-                // Route pour soumettre une partie qui démarre ou est finie
-                $app->post('/submit[/]', GameSubmitAction::class)->setName('game_submit');
+                    // Route pour récupérer les détails d'une partie spécifique (statut, score, etc.)
+                    $app->get('[/]', GameDetailsAction::class)->setName('game_details');
 
-            })->add(
-                $app->getContainer()->get('checkOwnership')
-            );
+                    // Route pour soumettre une partie qui démarre ou est finie
+                    $app->post('/submit[/]', GameSubmitAction::class)->setName('game_submit');
 
+                })->add(
+                    $app->getContainer()->get('checkOwnership')
+                );
+
+            });
+
+        })->add(
+            $app->getContainer()->get('checkJwt')
+        );
+
+        $app->group('/users', function ($app) {
+            // Route pour lister les parties d'un utilisateur
+            $app->get('/{userId}/games', UserGamesListAction::class)->add(
+                $app->getContainer()->get('checkJwt')
+            )->setName('user_games_list');
+
+            //create user profile route without checkjwt check
+            $app->post('/profile', UserProfileAction::class)->setName('user_profile');
         });
 
-        // Route pour lister les parties d'un utilisateur
-        $app->get('/users/{userId}/games', UserGamesListAction::class)->setName('user_games_list');
-
-    })->add(
-        $app->getContainer()->get('checkJwt')
-    );
-
-    //create user profile route
+    });
 
 };

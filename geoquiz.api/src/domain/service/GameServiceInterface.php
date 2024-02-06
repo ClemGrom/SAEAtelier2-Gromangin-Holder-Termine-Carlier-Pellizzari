@@ -21,4 +21,7 @@ interface GameServiceInterface
     // Submit a game
     public function submitGame(GamesDTO $game, int $score): GamesDTO;
 
+    // Get the list of games for a user
+    public function getUserGames(string $userId): array;
+
 }

@@ -21,3 +21,4 @@
 [2024-01-30T16:27:50.843114+00:00] auth.WARNING: Auth attempt failed for TESTING@free.fr : Wrong password [] []
 [2024-02-06T15:34:13.111195+00:00] auth.WARNING: JWT expired: Expired jwt token [] []
 [2024-02-06T16:07:07.334869+00:00] auth.WARNING: JWT expired: Expired jwt token [] []
+[2024-02-06T18:26:53.893561+00:00] auth.WARNING: JWT expired: Expired jwt token [] []
