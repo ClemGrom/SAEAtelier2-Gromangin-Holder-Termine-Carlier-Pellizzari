@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-import Acceuil from './views/Acceuil.vue';
+import Accueil from './views/Accueil.vue';
 import Inscription from './views/Inscription.vue';
 import Connexion from './views/Connexion.vue';
 import page404 from './views/page404.vue';
@@ -11,7 +11,7 @@ const router = createRouter({
         {
             path: '/',
             name: 'Accueil',
-            component: Acceuil,
+            component: Accueil,
         },
         {
             path: '/register',

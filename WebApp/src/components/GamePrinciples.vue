@@ -2,12 +2,12 @@
   <div class="home-container">
     <div class="gray-container">
       <div class="content-container">
-        <div class="content-section" :class="{ 'active': showPrinciples }" @click="togglePrinciplesDisplay">
-          <h2 class="section-title">Principe et règles du jeu</h2>
+        <div class="content-section" :class="{ 'active-section': showPrinciples }" @click="togglePrinciplesDisplay">
+          <h2 class="section-title" style="cursor:pointer">Principe et règles du jeu</h2>
           <div class="divider"></div>
         </div>
-        <div class="content-section" :class="{ 'active': showPoints }" @click="togglePointsDisplay">
-          <h2 class="section-title">Calculer ses points </h2>
+        <div class="content-section" :class="{ 'active-section': showPoints }" @click="togglePointsDisplay">
+          <h2 class="section-title" style="cursor:pointer">Calculer ses points </h2>
           <div class="divider"></div>
         </div>
       </div>
@@ -23,13 +23,13 @@
         </div>
         <div v-if="showPoints" class="text-content">
           <ul class="game-rules">
-            <p>Placement des réponses</p>
-            <li>pour 1 réponse placée à une distance &lt; D : <span class="point-value">5pts</span></li>
-            <li>pour 1 réponse placée à une distance &lt; 2D : <span class="point-value">3pts</span></li>
-            <li>pour 1 réponse placée à une distance &lt; 3D : <span class="point-value">1pts</span></li>
+            <p><strong>Placement des marqueurs</strong></p>
+            <li>pour 1 marqueur placée à une distance &lt; D : <span class="point-value">5pts</span></li>
+            <li>pour 1 marqueur placée à une distance &lt; 2D : <span class="point-value">3pts</span></li>
+            <li>pour 1 marqueur placée à une distance &lt; 3D : <span class="point-value">1pts</span></li>
           </ul>
           <ul class="game-rules">
-            <p>Prise en compte de la rapidité</p>
+            <p><strong>Prise en compte de la rapidité</strong></p>
             <li>les points sont multipliés par 4 pour une réponse en moins de 5s</li>
             <li>les points sont multipliés par 2 pour 1 réponse en moins de 10s</li>
             <li>les points ne sont pas acquis pour 1 réponse en plus de 20s</li>
@@ -44,18 +44,31 @@
 export default {
   data() {
     return {
-      showPrinciples: true,
-      showPoints: false
+      showPrinciples: true, 
+      showPoints: false,
     };
   },
   methods: {
     togglePrinciplesDisplay() {
-      this.showPrinciples = !this.showPrinciples;
-      this.showPoints = false;
+      if (!this.showPoints) {
+        this.showPrinciples = true;
+      } else {
+        this.showPrinciples = !this.showPrinciples;
+      }
+      if (this.showPrinciples) {
+        this.showPoints = false;
+      }
     },
+
     togglePointsDisplay() {
-      this.showPoints = !this.showPoints;
-      this.showPrinciples = false;
+      if (!this.showPrinciples) {
+        this.showPoints = true;
+      } else {
+        this.showPoints = !this.showPoints;
+      }
+      if (this.showPoints) {
+        this.showPrinciples = false;
+      }
     }
   }
 };
@@ -64,7 +77,6 @@ export default {
 <style scoped>
 body {
   font-family: Arial, sans-serif;
-  background-color: #22364B;
   padding-bottom: 100px;
 }
 
@@ -91,10 +103,16 @@ body {
   text-align: center;
   font-weight: bold;
   color : white;
+  color: #22364B;
 }
 
 .active {
   color: black;
+}
+
+.active-section {
+  background-color: #22364B;
+  color: #ecf0f1;;
 }
 
 .text-container {
@@ -106,8 +124,10 @@ body {
   border-radius: 8px;
   background-color: white;
   color: #000000;
+  color: #333;
   margin-bottom: 50px;
   width: 600px;
+  text-align:justify;
 }
 
 

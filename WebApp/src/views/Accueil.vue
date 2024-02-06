@@ -19,13 +19,16 @@
       <p1>
         Vous êtes prêt à relever le défi ?
       </p1>
+      <router-link to="/create-game" class="cta-button bigger-button mobile-only btn btn-primary w-100">Crée une partie !</router-link>
+    <button class="showRules cta-button mobile-only btn btn-primary" @click="showRules = true">Afficher les règles</button>
     </div>
+
     <div class="game-principles">
       <GamePrinciples />
     </div>
     <div class="illustration-section">
+      <router-link to="/create-game" class="cta-button bigger-button screen-only">Crée une partie !</router-link>
       <img src="@/assets/mapNancy.jpeg" alt="Illustration du jeu" class="illustration-image" />
-      <router-link to="/create-game" class="cta-button bigger-button">Crées une partie !</router-link>
     </div>
   </div>
   </body>
@@ -37,6 +40,16 @@ import GamePrinciples from '@/components/GamePrinciples.vue';
 export default {
   components: {
     GamePrinciples,
+  },
+  data() {
+    return {
+      showRules: false,
+    };
+  },
+  methods: {
+    toggleRulesDisplay() {
+      this.showRules = !this.showRules;
+    },
   },
 };
 </script>
@@ -83,7 +96,8 @@ nav {
 }
 
 .cta-button {
-  padding: 15px 30px;
+  padding: 10px 30px;
+  margin: 15px;
   font-size: 20px;
   color: #ecf0f1;
   background-color: #4AC78D;
@@ -102,7 +116,6 @@ nav {
   margin-left: 350px;
   width: 100%;
   margin-bottom: 50px;
-  text-align: justify;
   margin-top: 20px;
   font-size: 20px;
 }
@@ -111,8 +124,6 @@ nav {
   font-size: 20px;
   color: red;
   font-weight: bold;
-  text-align: justify;
-  margin-left: 225px;
 }
 
 .game-logo {
@@ -124,8 +135,7 @@ nav {
 .game-principles {
   padding: 20px;
   border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.8);
-  color: #ecf0f1;
+  background-color: #f5f5f1;
   grid-column: 1/2;
   margin-right: 20px;
 }
@@ -138,7 +148,6 @@ nav {
   background-color: white;
   padding: 20px;
   border-radius: 20px;
-  grid-column: 2/3;
 }
 
 .illustration-image {
@@ -149,5 +158,69 @@ nav {
 
 .bigger-button {
   font-size: 24px;
+}
+.mobile-only {
+  display: none;
+}
+
+.screen-only {
+  display: block;
+}
+
+.showRules {
+  background-color: gray;
+}
+
+@media (max-width: 1300px) {
+  .home-container {
+    grid-template-columns: 1fr;
+  }
+
+  .game-intro {
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+  }
+
+  .illustration-section {
+    order: 1;
+  }
+
+  .game-principles {
+    order: 2;
+    display: none;
+  }
+
+  .mobile-only {
+    display: block;
+  }
+
+  .screen-only {
+    display: none;
+  }
+}
+
+@media (max-width: 840px) {
+  .home-container {
+    grid-template-columns: 1fr;
+  }
+
+  nav {
+    flex-direction: column;
+  }
+
+  .header,
+  .user-actions {
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  .game-intro {
+    order: 1;
+  }
+
+  .illustration-section {
+    display:none;
+  }
 }
 </style>
