@@ -13,8 +13,7 @@
     "vue": "^3.3.10",
     "leaflet": "^1.7.1",
     "vue-router": "^4.0.13",
-    "vue-leaflet": "^2.7.0"
-
+    "@vue-leaflet/vue-leaflet": "^0.10.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.1",
