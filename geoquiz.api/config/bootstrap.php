@@ -1,7 +1,6 @@
 <?php
 
 use geoquiz\api\domain\middlewares\Cors;
-use geoquiz\api\domain\utils\Eloquent;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Slim\Factory\AppFactory;
 

@@ -6,6 +6,8 @@ use geoquiz\api\domain\dto\GamesDTO;
 
 interface GameServiceInterface
 {
+    // Check if the game belongs to the user
+    public function checkOwnership(string $gameId, string $uuid): bool;
 
     // Get all the difficulties available
     public function getDifficulties(): array;
@@ -15,5 +17,8 @@ interface GameServiceInterface
 
     // Get the details of a game
     public function getGameDetails(string $gameId, string $uuid): GamesDTO;
+
+    // Submit a game
+    public function submitGame(GamesDTO $game, int $score): GamesDTO;
 
 }

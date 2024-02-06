@@ -2,10 +2,8 @@
 
 namespace geoquiz\api\domain\service;
 
-use geoquiz\api\domain\dto\Difficulty_LevelsDTO;
 use geoquiz\api\domain\dto\GamesDTO;
 use geoquiz\api\domain\dto\SeriesDTO;
-use geoquiz\api\domain\dto\UsersDTO;
 use geoquiz\api\domain\entities\Difficulty_Levels;
 use geoquiz\api\domain\entities\Games;
 use geoquiz\api\domain\entities\Users;
@@ -19,6 +17,12 @@ class GameService implements GameServiceInterface
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
+    }
+
+    public function checkOwnership(string $gameId, string $uuid): bool
+    {
+        $this->logger->info('Checking ownership');
+        return Games::where(['game_id' => $gameId, 'user_id' => $uuid])->exists();
     }
 
     public function getDifficulties(): array
@@ -50,9 +54,20 @@ class GameService implements GameServiceInterface
     public function getGameDetails(string $gameId, string $uuid): GamesDTO
     {
         $this->logger->info('Getting game details');
-        return Games::where(['game_id' => $gameId, 'user_id' => $uuid])->firstOr(function () {
-            throw new \Exception('Game not found');
-        })->toDTO();
+        return Games::findOrFail($gameId)->toDTO();
+    }
+
+    public function submitGame(GamesDTO $game, int $score): GamesDTO
+    {
+        $this->logger->info('Submitting game');
+        $game = $game->toModel([
+                'status' => ($score > 0 ? 'terminée' : 'en cours'),
+                'score' => $score,
+                'finished_at' => ($score > 0 ? date('Y-m-d H:i:s') : null),
+                'update' => true
+            ]);
+        $game->update();
+        return $game->toDTO();
     }
 
 }

@@ -24,7 +24,7 @@ class UsersDTO extends DTO
         $this->total_games_played = $total_games_played;
     }
 
-    public function toModel() : Users
+    public function toModel($data = null) : Users
     {
         return Users::findOr($this->user_id, function () {
             $newUser = new Users();

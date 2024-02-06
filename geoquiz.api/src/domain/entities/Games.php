@@ -11,6 +11,7 @@ class Games extends Model
 {
     protected $table = 'games';
     protected $primaryKey = 'game_id';
+    protected $keyType = 'string';
     public $timestamps = false; // This is set to false because we don't have created_at and >updated_at< columns in our table
     protected $fillable = ['user_id', 'serie_id', 'difficulty_id', 'status', 'score', 'created_at', 'finished_at'];
 

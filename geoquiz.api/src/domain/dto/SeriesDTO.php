@@ -13,7 +13,7 @@ class SeriesDTO extends DTO
         $this->serie_id = $serie_id;
     }
 
-    public function toModel() : null
+    public function toModel($data = null) : null
     {
         return null;
     }

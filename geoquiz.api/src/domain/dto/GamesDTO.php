@@ -27,9 +27,9 @@ class GamesDTO extends DTO
         $this->finished_at = $finished_at;
     }
 
-    public function toModel()
+    public function toModel($data = null) : Games
     {
-        return Games::findOr($this->game_id, function () : Games{
+        return Games::findOr($this->game_id, function () : Games {
             $newGame = new Games();
             $newGame->game_id = $this->game_id;
             return $newGame;
@@ -37,10 +37,10 @@ class GamesDTO extends DTO
             'user_id' => $this->user->user_id,
             'serie_id' => $this->serie->serie_id,
             'difficulty_id' => $this->difficulty->difficulty_id,
-            'status' => $this->status,
-            'score' => $this->score,
+            'status' => $data['status'] ?? $this->status,
+            'score' => $data['score'] ?? $this->score,
             'created_at' => $this->created_at,
-            'finished_at' => $this->finished_at
+            'finished_at' => $data['finished_at'] ?? $this->finished_at
         ]);
     }
 }

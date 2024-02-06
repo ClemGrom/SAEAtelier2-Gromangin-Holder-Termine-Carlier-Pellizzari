@@ -24,13 +24,19 @@ return function( App $app):void {
             // Route pour créer une nouvelle partie
             $app->post('[/]', GameCreateAction::class)->setName('game_create');
 
-            // Route pour récupérer les détails d'une partie spécifique (statut, score, etc.)
-            $app->get('/{gameId}[/]', GameDetailsAction::class)->setName('game_details');
+            $app->group('/{gameId}', function($app) {
 
-            // Route pour soumettre une partie qui démarre ou est finie
-            $app->post('/{gameId}/submit[/]', GameSubmitAction::class)->setName('game_submit');
+                // Route pour récupérer les détails d'une partie spécifique (statut, score, etc.)
+                $app->get('[/]', GameDetailsAction::class)->setName('game_details');
 
-        })->add($app->getContainer()->get('checkJwt'));
+                // Route pour soumettre une partie qui démarre ou est finie
+                $app->post('/submit[/]', GameSubmitAction::class)->setName('game_submit');
+
+            })->add(
+                $app->getContainer()->get('checkOwnership')
+            );
+
+        });
 
         // Route pour lister les parties d'un utilisateur
         $app->get('/users/{userId}/games', UserGamesListAction::class)->setName('user_games_list');

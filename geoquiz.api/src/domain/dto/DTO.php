@@ -10,6 +10,6 @@ abstract class DTO
         return json_encode(get_object_vars($this));
     }
 
-    abstract public function toModel();
+    abstract public function toModel($data = null);
 
 }

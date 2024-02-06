@@ -21,7 +21,7 @@ class Difficulty_LevelsDTO extends DTO
         $this->time_limit = $time_limit;
     }
 
-    public function toModel() : Difficulty_Levels
+    public function toModel($data = null) : Difficulty_Levels
     {
         return Difficulty_Levels::findOr($this->difficulty_id, function () {
             $newDifficultyLevel = new Difficulty_Levels();
