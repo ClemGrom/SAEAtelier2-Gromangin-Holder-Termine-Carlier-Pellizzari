@@ -34,6 +34,37 @@ services:
     networks:
       - geoquiz-network
 
+  geoquiz-api_service:
+    image: canals/php:8.2
+    container_name: api_service
+    volumes:
+      - ./geoquiz.api:/var/www
+      - ./geoquiz.api/public:/var/www/html
+    ports:
+      - "50018:80"
+    environment:
+      - APP_ENV=local
+    restart: always
+    depends_on:
+      - geoquiz-api_db
+      - geoquiz-auth_service
+    networks:
+      - geoquiz-network
+
+  geoquiz-api_db:
+    image: mariadb:latest
+    container_name: api_db
+    environment:
+      MYSQL_DATABASE: api_db
+      MYSQL_ROOT_PASSWORD: PierreAndreGuenego
+      MYSQL_USER: root
+      MYSQL_PASSWORD: PierreAndreGuenego
+    ports:
+      - "50017:3306"
+    restart: always
+    networks:
+      - geoquiz-network
+
   geoquiz-front_interface:
     image: node:20-alpine
     ports:
@@ -48,6 +79,7 @@ services:
       - NODE_ENV=production
     depends_on:
       - geoquiz-auth_service
+      - geoquiz-api_service
 
   geoquiz-series_database:
     image: postgis/postgis:13-master

@@ -13,12 +13,6 @@ $containerBuilder = new ContainerBuilder();
 // Ajouter les paramètres de configuration au conteneur
 $containerBuilder->addDefinitions($settings);
 
-// Setting up Eloquent
-$capsule = new Capsule;
-$capsule->addConnection($settings['settings']['db']);
-$capsule->setAsGlobal();
-$capsule->bootEloquent();
-
 // Ajouter les dépendances et les actions au conteneur
 $dependencies = require __DIR__ . '/dependencies.php';
 $actions = require __DIR__ . '/actions.php';
