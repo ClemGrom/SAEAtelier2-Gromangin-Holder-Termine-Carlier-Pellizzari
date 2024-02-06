@@ -141,10 +141,34 @@ export default {
 
 .back-link {
   margin-top: 20px;
-  margin-right : 370px;
   color: white;
   text-decoration: underline;
   font-weight: bold;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .profile-container {
+    padding: 10px;
+  }
+
+  .page-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  .section-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  .bullet {
+    margin-right: 3px;
+  }
+
+  .back-link {
+    margin-right: 0;
+  }
 }
 
 </style>
