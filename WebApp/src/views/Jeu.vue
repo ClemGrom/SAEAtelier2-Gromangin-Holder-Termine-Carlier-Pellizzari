@@ -8,8 +8,7 @@
         </div>
 
         <div class="score">
-            <h2>Score : {{ score }}  Round : 1/5 </h2>
-         
+            <h2>Score : {{ score }}  Round : {{ currentRound }}/5</h2>
         </div>
 
         <div class="map-container" @mouseover="expandMap" @mouseleave="shrinkMap">
@@ -18,7 +17,7 @@
                 <l-tile-layer :url="osmURL" />
                 <l-marker v-if="marker" :lat-lng="marker.coordinates"></l-marker>
             </l-map>
-            <button class="custom-button">Envoyer</button>
+            <button class="custom-button" @click="checkDistance">Envoyer</button>
         </div>
 
         <div class="timer">
@@ -44,7 +43,7 @@ export default {
     data() {
         return {
             osmURL: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            center: [48.694, 6.18],
+            center: [48.694, 6.18], // Coordonnées initiales de la carte
             zoom: 10,
             maxZoom: 18,
             minZoom: 1,
@@ -52,25 +51,22 @@ export default {
             timeRemaining: 30,
             timerInterval: null,
             score: 0,
-            isMapExpanded: false
+            isMapExpanded: false,
+            imageCoordinates: [48.6936219, 6.1806664], // Coordonnées de l'image associée
+            currentRound: 1
         };
     },
     methods: {
         onMapClick(event) {
-            if (this.marker) {
-                this.marker.coordinates = [event.latlng.lat, event.latlng.lng];
-                // Mise à jour du score lorsqu'un marqueur est placé
-                this.updateScore();
-            } else {
+            if (!this.marker) {
                 this.marker = {
-                    id: 1,
                     coordinates: [event.latlng.lat, event.latlng.lng]
                 };
+            } else {
+                // Affichez un message d'erreur si le joueur essaie de placer plusieurs marqueurs
+                // Vous pouvez également remplacer le marqueur précédent par le nouveau
+                console.log("Vous ne pouvez placer qu'un seul marqueur par tour.");
             }
-        },
-        updateScore() {
-            // Mettez à jour le score ici, par exemple, ajoutez 100 points
-            this.score += 100;
         },
         toggleTimer() {
             if (this.timerInterval) {
@@ -95,6 +91,45 @@ export default {
         },
         shrinkMap() {
             this.isMapExpanded = false;
+        },
+        checkDistance() {
+            if (this.marker) {
+                // Calculez la distance entre les coordonnées du marqueur et les coordonnées de l'image associée
+                const distance = this.calculateDistance(this.marker.coordinates, this.imageCoordinates);
+                // Mettez à jour le score en fonction de la proximité du marqueur avec les coordonnées de l'image
+                // Vous pouvez ajuster cette logique en fonction de vos besoins spécifiques
+                this.updateScore(distance);
+                // Réinitialisez le marqueur pour permettre au joueur de placer un nouveau marqueur pour le prochain tour
+                this.marker = null;
+                // Passez au tour suivant si nécessaire
+                if (this.currentRound < 5) {
+                    this.currentRound++;
+                } else {
+                    // Fin du jeu, vous pouvez gérer ce cas ici
+                }
+            } else {
+                console.log("Veuillez placer un marqueur avant d'envoyer.");
+            }
+        },
+        calculateDistance(coord1, coord2) {
+            // Implémentez la fonction de calcul de la distance entre deux paires de coordonnées
+            // Par exemple, vous pouvez utiliser la formule de la distance euclidienne ou d'autres méthodes de calcul de distance géographique
+            // Cette fonction doit retourner la distance calculée
+            return Math.sqrt(Math.pow(coord1[0] - coord2[0], 2) + Math.pow(coord1[1] - coord2[1], 2));
+        },
+        updateScore(distance) {
+            // Mettez à jour le score en fonction de la distance calculée
+            // Vous pouvez ajuster cette logique en fonction de vos besoins spécifiques
+            if (distance < 0.01) {
+                this.score += 5; // Score maximum si le marqueur est très proche de l'image
+            } else if (distance < 0.05) {
+                this.score += 3; // Score intermédiaire si le marqueur est assez proche de l'image
+            }else if (distance < 0.1) {
+                this.score += 1; // Score intermédiaire si le marqueur est assez proche de l'image
+            }
+            else {
+                this.score += 0; // Score partiel si le marqueur est proche mais pas exactement sur l'image
+            }
         }
     },
     mounted() {
@@ -102,6 +137,7 @@ export default {
     }
 };
 </script>
+
 
 <style scoped>
 .greetings {
