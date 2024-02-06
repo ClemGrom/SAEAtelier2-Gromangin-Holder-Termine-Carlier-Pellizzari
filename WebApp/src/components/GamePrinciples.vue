@@ -50,12 +50,24 @@ export default {
   },
   methods: {
     togglePrinciplesDisplay() {
-      this.showPrinciples = !this.showPrinciples;
-      this.showPoints = false;
+      if (!this.showPoints) {
+        this.showPrinciples = true;
+      } else {
+        this.showPrinciples = !this.showPrinciples;
+      }
+      if (this.showPrinciples) {
+        this.showPoints = false;
+      }
     },
     togglePointsDisplay() {
-      this.showPoints = !this.showPoints;
-      this.showPrinciples = false;
+      if (!this.showPrinciples) {
+        this.showPoints = true;
+      } else {
+        this.showPoints = !this.showPoints;
+      }
+      if (this.showPoints) {
+        this.showPrinciples = false;
+      }
     },
     hoverEffect(event) {
       event.target.style.cursor = 'pointer';
@@ -63,9 +75,16 @@ export default {
     leaveEffect(event) {
       event.target.style.cursor = 'default';
     }
-  }
+ }
 };
 </script>
+
+hoverEffect(event) {
+event.target.style.cursor = 'pointer';
+},
+leaveEffect(event) {
+event.target.style.cursor = 'default';
+}
 
 <style scoped>
 body {
