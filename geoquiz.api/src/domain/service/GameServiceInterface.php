@@ -13,4 +13,7 @@ interface GameServiceInterface
     // Create a new game with the given difficulty and serie
     public function createGame(string $difficulty_id, string $serie_id, string $uuid): GamesDTO;
 
+    // Get the details of a game
+    public function getGameDetails(string $gameId, string $uuid): GamesDTO;
+
 }

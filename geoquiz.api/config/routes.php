@@ -38,4 +38,7 @@ return function( App $app):void {
     })->add(
         $app->getContainer()->get('checkJwt')
     );
+
+    //create user profile route
+
 };

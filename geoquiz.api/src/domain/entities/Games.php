@@ -3,6 +3,7 @@
 namespace geoquiz\api\domain\entities;
 
 use geoquiz\api\domain\dto\GamesDTO;
+use geoquiz\api\domain\dto\SeriesDTO;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -33,7 +34,7 @@ class Games extends Model
         return new GamesDTO(
             $this->game_id,
             $this->user()->first()->toDTO(),
-            $this->serie()->first()->toDTO(),
+            new SeriesDTO($this->serie_id),
             $this->difficulty()->first()->toDTO(),
             $this->status,
             $this->score,

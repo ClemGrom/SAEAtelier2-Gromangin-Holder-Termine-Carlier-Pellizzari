@@ -7,6 +7,7 @@ use geoquiz\api\domain\dto\GamesDTO;
 use geoquiz\api\domain\dto\SeriesDTO;
 use geoquiz\api\domain\dto\UsersDTO;
 use geoquiz\api\domain\entities\Difficulty_Levels;
+use geoquiz\api\domain\entities\Games;
 use geoquiz\api\domain\entities\Users;
 use Psr\Log\LoggerInterface;
 
@@ -45,4 +46,13 @@ class GameService implements GameServiceInterface
 
         return $game;
     }
+
+    public function getGameDetails(string $gameId, string $uuid): GamesDTO
+    {
+        $this->logger->info('Getting game details');
+        return Games::where(['game_id' => $gameId, 'user_id' => $uuid])->firstOr(function () {
+            throw new \Exception('Game not found');
+        })->toDTO();
+    }
+
 }
