@@ -1,15 +1,15 @@
 <template>
     <div class="greetings">
-    <img src="@/assets/placestan.jpg" alt="Place Stanislas" class="game-image" />
+        <img src="@/assets/placestan.jpg" alt="Place Stanislas" class="game-image" />
 
-    <div class="logo">
-      <img src="@/assets/game_logo.jpg" alt="Game Logo" class="game-logo" />
-      <h1>GéoQuizz</h1>
-    </div>
+        <div class="logo">
+            <img src="@/assets/game_logo.jpg" alt="Game Logo" class="game-logo" />
+            <h1>GéoQuizz</h1>
+        </div>
 
-    <div class="score">
-      <h2>Score : {{ score }}  Round : {{ currentRound }}/5</h2>
-    </div>
+        <div class="score">
+            <h2>Score : {{ score }} Round : {{ currentRound }}/5</h2>
+        </div>
 
         <div class="map-container" @mouseover="expandMap" @mouseleave="shrinkMap">
             <l-map ref="map" class="map" v-model:center="center" v-model:zoom="zoom" :max-zoom="maxZoom" :min-zoom="minZoom"
@@ -21,12 +21,12 @@
         </div>
 
         <div class="timer">
-      <button @click="toggleTimer" class="timer-button">
-        <img src="@/assets/pause.png" alt="pause" class="pause" />
-      </button>
-      <h2>Temps restant : {{ timeRemaining }}</h2>
+            <button @click="toggleTimer" class="timer-button">
+                <img src="@/assets/pause.png" alt="pause" class="pause" />
+            </button>
+            <h2>Temps restant : {{ timeRemaining }}</h2>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -34,54 +34,53 @@ import 'leaflet/dist/leaflet.css';
 import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet';
 
 export default {
-  name: 'jeu',
-  components: {
-    LMap,
-    LTileLayer,
-    LMarker
-  },
-  data() {
-    return {
-      osmURL: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      center: [48.694, 6.18],
-      zoom: 10,
-      maxZoom: 18,
-      minZoom: 1,
-      marker: null,
-      timeRemaining: 30,
-      timerInterval: null,
-      score: 0,
-      isMapExpanded: false,
-      imageCoordinates: [48.6936219, 6.1806664],
-      currentRound: 1
-    };
-  },
-  methods: {
-    // Méthode pour récupérer les données de localStorage
-    retrieveData() {
-      const savedScore = localStorage.getItem('score');
-      const savedRound = localStorage.getItem('round');
-      if (savedScore && savedRound) {
-        this.score = parseInt(savedScore);
-        this.currentRound = parseInt(savedRound);
-      }
+    name: 'jeu',
+    components: {
+        LMap,
+        LTileLayer,
+        LMarker
     },
-    // Méthode pour sauvegarder les données dans localStorage
-    saveData() {
-      localStorage.setItem('score', this.score.toString());
-      localStorage.setItem('round', this.currentRound.toString());
+    data() {
+        return {
+            osmURL: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            center: [48.694, 6.18],
+            zoom: 10,
+            maxZoom: 18,
+            minZoom: 1,
+            marker: null,
+            timeRemaining: 30,
+            timerInterval: null,
+            score: 0,
+            isMapExpanded: false,
+            imageCoordinates: [48.6936219, 6.1806664],
+            currentRound: 1
+        };
     },
-        onMapClick(event) {
-            if (!this.marker) {
-                this.marker = {
-                    coordinates: [event.latlng.lat, event.latlng.lng]
-                };
-            } else {
-                // Affichez un message d'erreur si le joueur essaie de placer plusieurs marqueurs
-                // Vous pouvez également remplacer le marqueur précédent par le nouveau
-                console.log("Vous ne pouvez placer qu'un seul marqueur par tour.");
+    methods: {
+        // Méthode pour récupérer les données de localStorage
+        retrieveData() {
+            const savedScore = localStorage.getItem('score');
+            const savedRound = localStorage.getItem('round');
+            if (savedScore && savedRound) {
+                this.score = parseInt(savedScore);
+                this.currentRound = parseInt(savedRound);
             }
         },
+        // Méthode pour sauvegarder les données dans localStorage
+        saveData() {
+            localStorage.setItem('score', this.score.toString());
+            localStorage.setItem('round', this.currentRound.toString());
+        },
+        onMapClick(event) {
+    if (!this.marker) {
+        this.marker = {
+            coordinates: [event.latlng.lat, event.latlng.lng]
+        };
+    } else {
+        // Remplacez le marqueur existant par le nouveau
+        this.marker.coordinates = [event.latlng.lat, event.latlng.lng];
+    }
+},
         toggleTimer() {
             if (this.timerInterval) {
                 clearInterval(this.timerInterval);
@@ -92,16 +91,16 @@ export default {
             }
         },
         startTimer() {
-  this.timerInterval = setInterval(() => {
-    if (this.timeRemaining === 0) { // Utilisation de === pour une comparaison stricte
-      clearInterval(this.timerInterval);
-      this.currentRound++; // Utilisation de this.currentRound pour accéder à la propriété de l'instance
-      this.redirectToFinRound(); 
-    } else {
-      this.timeRemaining--; // Redirection vers la fin du tour lorsque le temps est écoulé
-    }
-  }, 1000);
-},
+            this.timerInterval = setInterval(() => {
+                if (this.timeRemaining === 0) { // Utilisation de === pour une comparaison stricte
+                    clearInterval(this.timerInterval);
+                    this.currentRound++; // Utilisation de this.currentRound pour accéder à la propriété de l'instance
+                    this.redirectToFinRound();
+                } else {
+                    this.timeRemaining--; // Redirection vers la fin du tour lorsque le temps est écoulé
+                }
+            }, 1000);
+        },
 
         redirectToFinRound() {
             // Redirection vers la fin du tour
@@ -127,7 +126,7 @@ export default {
                     this.currentRound++;
                 } else {
                     // Rediriger vers FinJeu.vue si le nombre de tours dépasse 5
-                    this.$router.push('/FinJeu'); 
+                    this.$router.push('/FinJeu');
                 }
 
             } else {
@@ -151,22 +150,22 @@ export default {
         }
     },
     mounted() {
-    this.retrieveData(); // Récupérer les données sauvegardées lors du chargement du composant
-    this.startTimer();
-  },
-  watch: {
-    // Surveiller les changements de score et de tour et les sauvegarder automatiquement
-    score: function(newScore) {
-      this.saveData();
+        this.retrieveData(); // Récupérer les données sauvegardées lors du chargement du composant
+        this.startTimer();
     },
-    currentRound: function(newRound) {
-      this.saveData();
-      // Rediriger vers FinJeu.vue si le nombre de tours dépasse 5
-      if (newRound >= 5) {
-        this.$router.push('/FinJeu');
-      }
+    watch: {
+        // Surveiller les changements de score et de tour et les sauvegarder automatiquement
+        score: function (newScore) {
+            this.saveData();
+        },
+        currentRound: function (newRound) {
+            this.saveData();
+            // Rediriger vers FinJeu.vue si le nombre de tours dépasse 5
+            if (newRound >= 5) {
+                this.$router.push('/FinJeu');
+            }
+        }
     }
-  }
 };
 </script>
 
