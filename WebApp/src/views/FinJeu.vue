@@ -5,7 +5,7 @@
         </nav>
 
         <div class="gameScore">
-            <div class="scoreText"> Votre score : </div>
+            <div class="scoreText"> Score Final : </div>
             <div class="score"> 25000 </div>  <!-- Changer score en fonction de la partie -->
         </div>
 
