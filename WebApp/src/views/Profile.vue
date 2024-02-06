@@ -86,7 +86,6 @@ export default {
   padding: 20px;
   background: #2c3e50;
   border-radius: 15px;
-  box-shadow: 0 8px 16px rgba(255, 123, 95, 0.3);
   height: 100%;
   display: flex;
   flex-direction: column;
