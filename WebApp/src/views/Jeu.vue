@@ -1,3 +1,35 @@
+<template>
+    <div class="greetings">
+        <img src="@/assets/placestan.jpg" alt="Place Stanislas" class="game-image" />
+
+        <div class="logo">
+            <img src="@/assets/game_logo.jpg" alt="Game Logo" class="game-logo" />
+            <h1>GéoQuizz</h1>
+        </div>
+
+        <div class="score">
+            <h2>Score : {{ score }}  Round : 1/5 </h2>
+         
+        </div>
+
+        <div class="map-container" @mouseover="expandMap" @mouseleave="shrinkMap">
+            <l-map ref="map" class="map" v-model:center="center" v-model:zoom="zoom" :max-zoom="maxZoom" :min-zoom="minZoom"
+                :zoom-control="false" :use-global-leaflet="false" @click="onMapClick">
+                <l-tile-layer :url="osmURL" />
+                <l-marker v-if="marker" :lat-lng="marker.coordinates"></l-marker>
+            </l-map>
+            <button class="custom-button">Envoyer</button>
+        </div>
+
+        <div class="timer">
+            <button @click="toggleTimer" class="timer-button">
+                <img src="@/assets/pause.png" alt="pause" class="pause" />
+            </button>
+            <h2>Temps restant : {{ timeRemaining }}</h2>
+        </div>
+    </div>
+</template>
+
 <script>
 import 'leaflet/dist/leaflet.css';
 import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet';
@@ -19,7 +51,8 @@ export default {
             marker: null,
             timeRemaining: 30,
             timerInterval: null,
-            score: 0
+            score: 0,
+            isMapExpanded: false
         };
     },
     methods: {
@@ -57,6 +90,12 @@ export default {
                 }
             }, 1000);
         },
+        expandMap() {
+            this.isMapExpanded = true;
+        },
+        shrinkMap() {
+            this.isMapExpanded = false;
+        }
     },
     mounted() {
         this.startTimer();
@@ -64,49 +103,15 @@ export default {
 };
 </script>
 
-<template>
-    <div class="greetings">
-
-
-        <img src="@/assets/placestan.jpg" alt="Place Stanislas" class="game-image" />
-
-        <div class="logo">
-            <img src="@/assets/game_logo.jpg" alt="Game Logo" class="game-logo" />
-            <h1>GéoQuizz</h1>
-
-        </div>
-        <div class="score">
-            <h2>Score : {{ score }}</h2>
-        </div>
-        <div class="map-container">
-            <l-map ref="map" class="map" v-model:center="center" v-model:zoom="zoom" :max-zoom="maxZoom" :min-zoom="minZoom"
-                :zoom-control="false" :use-global-leaflet="false" @click="onMapClick">
-                <l-tile-layer :url="osmURL" />
-                <l-marker v-if="marker" :lat-lng="marker.coordinates"></l-marker>
-            </l-map>
-            <button>Envoyer</button>
-        </div>
-        <div class="timer">
-            <button @click="toggleTimer"><img src="@/assets/pause.png" alt="pause" class="pause" /></button>
-            <h2>Temps restant : {{ timeRemaining }}</h2>
-        </div>
-    </div>
-</template>
-
-
 <style scoped>
 .greetings {
-
     position: relative;
-
-
 }
 
 .logo {
     display: flex;
     align-items: center;
     font-size: 2em;
-
     z-index: 1;
     color: white;
     text-shadow: 2px 2px 4px rgba(92, 83, 214, 0.5);
@@ -114,9 +119,6 @@ export default {
     top: 0;
     left: 0;
     margin-left: 20px;
-
-
-
 }
 
 .logo img {
@@ -127,7 +129,6 @@ export default {
 }
 
 .score {
-
     background-color: #2B80B0;
     z-index: 1;
     color: white;
@@ -140,8 +141,6 @@ export default {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     margin-top: 20px;
-
-
 }
 
 .timer {
@@ -157,14 +156,24 @@ export default {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     margin-bottom: 20px;
     display: flex;
-
 }
 
 .timer button {
     cursor: pointer;
     background: none;
     border: none;
+}
 
+.timer-button {
+    background-color: transparent;
+}
+
+.timer-button:hover .pause {
+    transform: scale(1.1);
+}
+
+.pause {
+    transition: transform 0.3s ease;
 }
 
 .game-image {
@@ -175,33 +184,48 @@ export default {
 }
 
 .map-container {
-    height: 300px;
-    width: 400px;
+    height: 200px;
+    width: 200px;
+    /* Taille initiale */
     position: absolute;
     bottom: 0;
     right: 0;
-    
     z-index: 1;
     margin: 10px;
+    overflow: hidden;
+    /* Pour cacher le dépassement */
+    transition: 0.3s ease;
+
+
 }
 
 .map {
     border-radius: 20px;
-    width: 100%;
-    height: 100%;
 }
 
-.map-container button {
-    font-size: 40px;
-    font-style: bold;
-    width: 100%;
-    background-color: #4AC78D;
-    color: white;
-    padding: 10px;
-    border-radius: 10px;
-    margin: 10px;
-    cursor: pointer;
-    border: none;
-    margin-right: 30px;
+.map-container:hover {
+    width: 400px;
+    /* Taille augmentée au survol */
+    height: 400px;
 }
-</style>
+
+.custom-button {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: white;
+    background-color: #4AC78D;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: width 0.3s ease, height 0.3s ease;
+    /* Ajout de la transition de taille */
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 10px;
+}
+
+.custom-button:hover {
+    background-color: #3fa670;
+}</style>
