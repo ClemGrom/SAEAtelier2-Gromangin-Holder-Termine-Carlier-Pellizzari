@@ -13,9 +13,9 @@ class GamesDTO extends DTO
     public string $status;
     public int $score;
     public string $created_at;
-    public string $finished_at;
+    public ?string $finished_at;
 
-    public function __construct(string $game_id, UsersDTO $user, SeriesDTO $serie, Difficulty_LevelsDTO $difficulty, string $status, int $score, string $created_at, string $finished_at)
+    public function __construct(string $game_id, UsersDTO $user, SeriesDTO $serie, Difficulty_LevelsDTO $difficulty, string $status, int $score, string $created_at, string $finished_at = null)
     {
         $this->game_id = $game_id;
         $this->user = $user;

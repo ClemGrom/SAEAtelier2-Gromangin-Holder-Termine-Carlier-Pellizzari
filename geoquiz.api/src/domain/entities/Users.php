@@ -10,6 +10,7 @@ class Users extends Model
 {
     protected $table = 'users';
     protected $primaryKey = 'user_id';
+    protected $keyType = 'string';
     public $timestamps = false;
     protected $fillable = ['username', 'email', 'created_at', 'total_score', 'total_games_played'];
 
