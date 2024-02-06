@@ -3,6 +3,7 @@
 namespace geoquiz\api\domain\service;
 
 use geoquiz\api\domain\dto\GamesDTO;
+use geoquiz\api\domain\dto\UsersDTO;
 
 interface GameServiceInterface
 {
@@ -23,5 +24,8 @@ interface GameServiceInterface
 
     // Get the list of games for a user
     public function getUserGames(string $userId): array;
+
+    // Create a new user
+    public function createUser(UsersDTO $user): UsersDTO;
 
 }

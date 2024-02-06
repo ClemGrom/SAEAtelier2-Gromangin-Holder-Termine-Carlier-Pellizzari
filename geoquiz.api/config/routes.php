@@ -52,7 +52,9 @@ return function( App $app):void {
             )->setName('user_games_list');
 
             //create user profile route without checkjwt check
-            $app->post('/profile', UserProfileAction::class)->setName('user_profile');
+            $app->post('/profile', UserProfileAction::class)->add(
+                $app->getContainer()->get('checkOwnership')
+            )->setName('user_profile');
         });
 
     });

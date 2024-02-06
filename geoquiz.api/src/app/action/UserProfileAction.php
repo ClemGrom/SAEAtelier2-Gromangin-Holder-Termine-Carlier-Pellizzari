@@ -2,13 +2,12 @@
 
 namespace geoquiz\api\app\action;
 
+use geoquiz\api\domain\dto\UsersDTO;
 use geoquiz\api\domain\service\GameServiceInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Exception\HttpForbiddenException;
-use Slim\Routing\RouteContext;
 
-class UserGamesListAction extends Action
+class UserProfileAction extends Action
 {
     private GameServiceInterface $gameService;
 
@@ -19,19 +18,20 @@ class UserGamesListAction extends Action
 
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        if ($request->getAttribute('uuid') !== $args['userId']) {
-            throw new HttpForbiddenException($request, 'You are not allowed to access this game list');
-        }
+        $data = $request->getParsedBody();
 
-        $userId = $args['userId'];
-        $games = $this->gameService->getUserGames($userId);
+        $user = $this->gameService->createUser(new UsersDTO(
+            $data['user_id'],
+            $data['username'],
+            $data['email'],
+            date('Y-m-d H:i:s'),
+            0,
+            0
+        ));
 
         $responseJson = [
-            'type' => 'collection',
-            'games' => $games,
-            'links' => [
-                'self' => RouteContext::fromRequest($request)->getRouteParser()->urlFor('user_games_list', ['userId' => $userId])
-            ]
+            'type' => 'resource',
+            'user' => $user,
         ];
 
         $response->getBody()->write(json_encode($responseJson));

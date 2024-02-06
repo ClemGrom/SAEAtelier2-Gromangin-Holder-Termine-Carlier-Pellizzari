@@ -31,11 +31,11 @@ class UsersDTO extends DTO
             $newUser->user_id = $this->user_id;
             return $newUser;
         })->fill([
-            'username' => $this->username,
-            'email' => $this->email,
-            'created_at' => $this->created_at,
-            'total_score' => $this->total_score,
-            'total_games_played' => $this->total_games_played
+            'username' => $data['username'] ?? $this->username,
+            'email' => $data['email'] ?? $this->email,
+            'created_at' => $data['created_at'] ?? $this->created_at,
+            'total_score' => $data['total_score'] ?? $this->total_score,
+            'total_games_played' => $data['total_games_played'] ?? $this->total_games_played
         ]);
     }
 

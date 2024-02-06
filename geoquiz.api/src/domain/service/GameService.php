@@ -4,6 +4,7 @@ namespace geoquiz\api\domain\service;
 
 use geoquiz\api\domain\dto\GamesDTO;
 use geoquiz\api\domain\dto\SeriesDTO;
+use geoquiz\api\domain\dto\UsersDTO;
 use geoquiz\api\domain\entities\Difficulty_Levels;
 use geoquiz\api\domain\entities\Games;
 use geoquiz\api\domain\entities\Users;
@@ -67,6 +68,15 @@ class GameService implements GameServiceInterface
                 'update' => true
             ]);
         $game->update();
+
+        //if score is greater than 0, we update the user's score and total games played
+        if ($score > 0) {
+            $game->user()->first()->update([
+                'total_score' => $game->user()->first()->total_score + $score,
+                'total_games_played' => $game->user()->first()->total_games_played + 1
+            ]);
+        }
+
         return $game->toDTO();
     }
 
@@ -78,4 +88,10 @@ class GameService implements GameServiceInterface
         })->toArray();
     }
 
+    public function createUser(UsersDTO $user): UsersDTO
+    {
+        $user = $user->toModel();
+        $user->save();
+        return $user->toDTO();
+    }
 }
