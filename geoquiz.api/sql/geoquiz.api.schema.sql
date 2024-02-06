@@ -28,13 +28,5 @@ CREATE TABLE games (
                        created_at DATETIME NOT NULL,
                        finished_at DATETIME,
                        FOREIGN KEY (user_id) REFERENCES users(user_id),
-                       FOREIGN KEY (serie_id) REFERENCES series(serie_id),
                        FOREIGN KEY (difficulty_id) REFERENCES difficulty_levels(difficulty_id)
-);
-
--- Séries
-CREATE TABLE series (
-                        serie_id CHAR(36) PRIMARY KEY NOT NULL,
-                        name VARCHAR(255) NOT NULL,
-                        description TEXT
 );

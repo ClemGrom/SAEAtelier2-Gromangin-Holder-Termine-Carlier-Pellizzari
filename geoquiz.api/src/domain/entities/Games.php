@@ -32,9 +32,9 @@ class Games extends Model
     {
         return new GamesDTO(
             $this->game_id,
-            $this->user_id,
-            $this->serie_id,
-            $this->difficulty_id,
+            $this->user()->first()->toDTO(),
+            $this->serie()->first()->toDTO(),
+            $this->difficulty()->first()->toDTO(),
             $this->status,
             $this->score,
             $this->created_at,

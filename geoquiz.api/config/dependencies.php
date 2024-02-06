@@ -2,9 +2,9 @@
 
 
 use geoquiz\api\domain\middlewares\BeforeCheckJWT;
+use geoquiz\api\domain\service\GameService;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-//use geoquiz\api\domain\service\catalogue\CatalogueService;
 use Psr\Container\ContainerInterface;
 
 return [
@@ -19,9 +19,8 @@ return [
         return new BeforeCheckJWT($container->get('uri.auth'));
     },
 
-//    'catalogue.service' => function(ContainerInterface $container) {
-//        return new CatalogueService();
-//    },
-
+    'game.service' => function(ContainerInterface $container) {
+        return new GameService($container->get('logger'));
+    },
 
 ];

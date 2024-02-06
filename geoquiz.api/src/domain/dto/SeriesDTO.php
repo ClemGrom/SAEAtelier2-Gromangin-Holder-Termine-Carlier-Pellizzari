@@ -2,8 +2,6 @@
 
 namespace geoquiz\api\domain\dto;
 
-use geoquiz\api\domain\entities\Series;
-
 class SeriesDTO extends DTO
 {
     public string $serie_id;
@@ -17,15 +15,8 @@ class SeriesDTO extends DTO
         $this->description = $description;
     }
 
-    public function toModel() : Series
+    public function toModel() : null
     {
-        return Series::findOr($this->serie_id, function () {
-            $newSerie = new Series();
-            $newSerie->serie_id = $this->serie_id;
-            return $newSerie;
-        })->fill([
-            'name' => $this->name,
-            'description' => $this->description
-        ]);
+        return null;
     }
 }
