@@ -142,7 +142,7 @@ export default {
 
 .back-link {
   margin-top: 20px;
-  margin-right: 370px;
+  margin-right : 1300px;
   color: white;
   text-decoration: underline;
   font-weight: bold;
