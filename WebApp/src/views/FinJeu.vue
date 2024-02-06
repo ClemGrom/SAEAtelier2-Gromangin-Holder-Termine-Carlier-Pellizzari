@@ -50,7 +50,7 @@
 
     #container {
         background-color: #2c3e50;
-        background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('../assets/Nancy_Town_Hall.jpg'); /*Changer l'image en fonction de la partie*/
+        background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('../assets/placestan.jpg'); /*Changer l'image en fonction de la partie*/
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
