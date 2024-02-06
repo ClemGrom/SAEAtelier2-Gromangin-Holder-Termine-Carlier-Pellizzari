@@ -1,15 +1,15 @@
 <template>
     <div class="greetings">
-        <img src="@/assets/placestan.jpg" alt="Place Stanislas" class="game-image" />
+    <img src="@/assets/placestan.jpg" alt="Place Stanislas" class="game-image" />
 
-        <div class="logo">
-            <img src="@/assets/game_logo.jpg" alt="Game Logo" class="game-logo" />
-            <h1>GéoQuizz</h1>
-        </div>
+    <div class="logo">
+      <img src="@/assets/game_logo.jpg" alt="Game Logo" class="game-logo" />
+      <h1>GéoQuizz</h1>
+    </div>
 
-        <div class="score">
-            <h2>Score : {{ score }}  Round : {{ currentRound }}/5</h2>
-        </div>
+    <div class="score">
+      <h2>Score : {{ score }}  Round : {{ currentRound }}/5</h2>
+    </div>
 
         <div class="map-container" @mouseover="expandMap" @mouseleave="shrinkMap">
             <l-map ref="map" class="map" v-model:center="center" v-model:zoom="zoom" :max-zoom="maxZoom" :min-zoom="minZoom"
@@ -17,16 +17,16 @@
                 <l-tile-layer :url="osmURL" />
                 <l-marker v-if="marker" :lat-lng="marker.coordinates"></l-marker>
             </l-map>
-            <button class="custom-button" @click="checkDistance">Envoyer</button>
+            <router-link :to="{ path: '/FinRound' }" class="custom-button" @click="checkDistance">Envoyer</router-link>
         </div>
 
         <div class="timer">
-            <button @click="toggleTimer" class="timer-button">
-                <img src="@/assets/pause.png" alt="pause" class="pause" />
-            </button>
-            <h2>Temps restant : {{ timeRemaining }}</h2>
-        </div>
+      <button @click="toggleTimer" class="timer-button">
+        <img src="@/assets/pause.png" alt="pause" class="pause" />
+      </button>
+      <h2>Temps restant : {{ timeRemaining }}</h2>
     </div>
+  </div>
 </template>
 
 <script>
@@ -34,29 +34,43 @@ import 'leaflet/dist/leaflet.css';
 import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet';
 
 export default {
-    name: 'CarteOs',
-    components: {
-        LMap,
-        LTileLayer,
-        LMarker
+  name: 'jeu',
+  components: {
+    LMap,
+    LTileLayer,
+    LMarker
+  },
+  data() {
+    return {
+      osmURL: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      center: [48.694, 6.18],
+      zoom: 10,
+      maxZoom: 18,
+      minZoom: 1,
+      marker: null,
+      timeRemaining: 30,
+      timerInterval: null,
+      score: 0,
+      isMapExpanded: false,
+      imageCoordinates: [48.6936219, 6.1806664],
+      currentRound: 1
+    };
+  },
+  methods: {
+    // Méthode pour récupérer les données de localStorage
+    retrieveData() {
+      const savedScore = localStorage.getItem('score');
+      const savedRound = localStorage.getItem('round');
+      if (savedScore && savedRound) {
+        this.score = parseInt(savedScore);
+        this.currentRound = parseInt(savedRound);
+      }
     },
-    data() {
-        return {
-            osmURL: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            center: [48.694, 6.18], // Coordonnées initiales de la carte
-            zoom: 10,
-            maxZoom: 18,
-            minZoom: 1,
-            marker: null,
-            timeRemaining: 30,
-            timerInterval: null,
-            score: 0,
-            isMapExpanded: false,
-            imageCoordinates: [48.6936219, 6.1806664], // Coordonnées de l'image associée
-            currentRound: 1
-        };
+    // Méthode pour sauvegarder les données dans localStorage
+    saveData() {
+      localStorage.setItem('score', this.score.toString());
+      localStorage.setItem('round', this.currentRound.toString());
     },
-    methods: {
         onMapClick(event) {
             if (!this.marker) {
                 this.marker = {
@@ -72,19 +86,26 @@ export default {
             if (this.timerInterval) {
                 clearInterval(this.timerInterval);
                 this.timerInterval = null;
+                this.redirectToFinRound(); // Redirection vers la fin du tour lorsque le temps est mis en pause
             } else {
                 this.startTimer();
             }
         },
         startTimer() {
-            this.timerInterval = setInterval(() => {
-                if (this.timeRemaining > 0) {
-                    this.timeRemaining--;
-                } else {
-                    clearInterval(this.timerInterval);
-                    // Le temps est écoulé, vous pouvez gérer ce cas ici
-                }
-            }, 1000);
+  this.timerInterval = setInterval(() => {
+    if (this.timeRemaining === 0) { // Utilisation de === pour une comparaison stricte
+      clearInterval(this.timerInterval);
+      this.currentRound++; // Utilisation de this.currentRound pour accéder à la propriété de l'instance
+      this.redirectToFinRound(); 
+    } else {
+      this.timeRemaining--; // Redirection vers la fin du tour lorsque le temps est écoulé
+    }
+  }, 1000);
+},
+
+        redirectToFinRound() {
+            // Redirection vers la fin du tour
+            this.$router.push('/FinRound');
         },
         expandMap() {
             this.isMapExpanded = true;
@@ -105,8 +126,10 @@ export default {
                 if (this.currentRound < 5) {
                     this.currentRound++;
                 } else {
-                    // Fin du jeu, vous pouvez gérer ce cas ici
+                    // Rediriger vers FinJeu.vue si le nombre de tours dépasse 5
+                    this.$router.push('/FinJeu'); 
                 }
+
             } else {
                 console.log("Veuillez placer un marqueur avant d'envoyer.");
             }
@@ -122,22 +145,30 @@ export default {
             // Vous pouvez ajuster cette logique en fonction de vos besoins spécifiques
             if (distance < 0.01) {
                 this.score += 5; // Score maximum si le marqueur est très proche de l'image
-            } else if (distance < 0.05) {
-                this.score += 3; // Score intermédiaire si le marqueur est assez proche de l'image
-            }else if (distance < 0.1) {
-                this.score += 1; // Score intermédiaire si le marqueur est assez proche de l'image
-            }
-            else {
-                this.score += 0; // Score partiel si le marqueur est proche mais pas exactement sur l'image
+            } else {
+                this.score += 3; // Score partiel si le marqueur est proche mais pas exactement sur l'image
             }
         }
     },
     mounted() {
-        this.startTimer();
+    this.retrieveData(); // Récupérer les données sauvegardées lors du chargement du composant
+    this.startTimer();
+  },
+  watch: {
+    // Surveiller les changements de score et de tour et les sauvegarder automatiquement
+    score: function(newScore) {
+      this.saveData();
+    },
+    currentRound: function(newRound) {
+      this.saveData();
+      // Rediriger vers FinJeu.vue si le nombre de tours dépasse 5
+      if (newRound >= 5) {
+        this.$router.push('/FinJeu');
+      }
     }
+  }
 };
 </script>
-
 
 <style scoped>
 .greetings {
@@ -164,11 +195,15 @@ export default {
     padding-right: 10px;
 }
 
+h2 {
+    font-size: 40px;
+    margin: 0;
+    color: white;
+}
+
 .score {
     background-color: #2B80B0;
     z-index: 1;
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     position: absolute;
     top: 0;
     right: 0;
@@ -202,6 +237,8 @@ export default {
 
 .timer-button {
     background-color: transparent;
+    height: 40px;
+    width: 40px;
 }
 
 .timer-button:hover .pause {
@@ -231,8 +268,6 @@ export default {
     overflow: hidden;
     /* Pour cacher le dépassement */
     transition: 0.3s ease;
-
-
 }
 
 .map {
@@ -264,4 +299,5 @@ export default {
 
 .custom-button:hover {
     background-color: #3fa670;
-}</style>
+}
+</style>
