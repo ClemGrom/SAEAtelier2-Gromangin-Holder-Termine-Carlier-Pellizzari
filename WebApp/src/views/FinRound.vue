@@ -1,5 +1,5 @@
 <template>
-    <body class="lalezar-regular">
+    <div id="container" class="lalezar-regular">
         <nav>
             <img src="@/assets/game_logo.jpg" alt="Game Logo" class="game-logo" />
         </nav>
@@ -12,36 +12,34 @@
 
         <footer>
             <div class="continue"> Continuer </div>
-            <div class="quit"> X </div>
+            <img src="@/assets/quit.svg" alt="Quit" class="quit" />
         </footer>
-    </body>
+    </div>
 </template>
 
-<style>
+<style scoped>
     @import url('https://fonts.googleapis.com/css2?family=Lalezar&display=swap');
     .lalezar-regular {
         font-family: "Lalezar", system-ui;
         font-weight: 400;
-        font-style: normal;
     }
 
-    body {
-        font-family: Arial, sans-serif;
-        font-weight: 400;
+    #container {
         background-color: #2c3e50;
-        background-image : url('../assets/Nancy_Town_Hall.jpg'); /*Changer l'image en fonction de la partie*/
+        background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('../assets/Nancy_Town_Hall.jpg'); /*Changer l'image en fonction de la partie*/
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
         margin: 0;
         padding: 0;
-        height: 100vh;
+        height: 95vh;
     }
 
     .game-logo {
         width: 70px;
         height: 70px;
         border-radius: 50%;
+        margin: 20px;
     }
 
     .gameScore {
@@ -49,55 +47,59 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        height: calc(75vh - 60px);
     }
 
     .round {
         font-size: 64px;
-        -webkit-text-stroke: 2px #2B80B0;
+        -webkit-text-stroke: 0.025em #2B80B0;
         color : white;
+        text-shadow: 0px 4px 4px black;
+        letter-spacing: -2px;
     }
 
     .scoreText {
         font-size: 96px;
-        -webkit-text-stroke: 2px #2B80B0;
+        -webkit-text-stroke: 0.025em #2B80B0;
         color : white;
+        text-shadow: 0px 4px 4px black;
+        letter-spacing: -2px;
     }
 
     .score {
         font-size: 128px;
-        -webkit-text-stroke: 2px #2B80B0;
+        -webkit-text-stroke: 0.025em #2B80B0;
         color : white;
+        text-shadow: 0px 4px 4px black;
+        letter-spacing: -2px;
     }
 
     footer {
         background-color: #49658F;
-        display: flex;
-        justify-content: center;
         position: fixed;
         bottom: 0;
         width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 10vh;
     }
 
     .continue {
-        justify-content: center;
         background-color: #2E9C39;
-        width : 150px;
-        height: 30px;
         border-radius: 20px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
         color: white;
-        margin-right: 10px;
-        text-align: center;
-        font-size: 20px;
-        margin-top: 25px;
+        font-size: 25px;
+        width: 200px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 20px;
     }
 
     .quit {
-        font-size: 60px;
-        color: white;
-        margin-left: 10px;
+        height: 30px;
+        margin-left: 20px;
     }
-
-    /* Faire en bootstrap */
 </style>
