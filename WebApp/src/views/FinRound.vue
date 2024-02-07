@@ -11,7 +11,7 @@
       </div>
   
       <footer>
-        <div class="timer">{{ timer }}</div>
+        <!-- <div class="timer">{{ timer }}</div> -->
         <router-link :to="{ path: '/jeu' }" class="continue" >Continuer</router-link>
         <img src="@/assets/quit.svg" alt="Quit" class="quit" />
       </footer>
@@ -23,33 +23,11 @@
     name: 'FinRound',
     data() {
       return {
-        score: parseInt(localStorage.getItem('score')) || 0,
-        round: parseInt(localStorage.getItem('round')) || 1,
-        timer: 20 // Initialiser le timer à 20 secondes
+        score: parseInt(localStorage.getItem('score')), 
+        round: parseInt(localStorage.getItem('currentRound')),
       };
     },
-    mounted() {
-      // Démarrez le compte à rebours
-      this.startCountdown();
-    },
-    methods: {
-      startCountdown() {
-        // Utilisez setInterval pour mettre à jour le timer chaque seconde
-        this.intervalId = setInterval(() => {
-          if (this.timer > 0) {
-            this.timer--;
-          } else {
-            // Redirigez vers la page "jeu" lorsque le temps est écoulé
-            this.$router.push('/jeu');
-            clearInterval(this.intervalId); // Arrêtez le compte à rebours
-          }
-        }, 1000);
-      }
-    },
-    beforeDestroy() {
-      // Assurez-vous d'arrêter le compte à rebours lorsque le composant est détruit
-      clearInterval(this.intervalId);
-    }
+
   };
   </script>
   
