@@ -79,15 +79,16 @@ services:
   geoquiz-front_interface:
     image: node:20-alpine
     ports:
-      - "50001:3000"
+      - "50001:5173"
     volumes:
       - ./geoquiz.front_interface:/app
     working_dir: /app
-    command: sh -c "npm install && npm start"
+    #installing dependencies with dev dependencies and running the run dev
+    command: sh -c "npm install --include=dev && npm run dev"
     networks:
       - geoquiz-network
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=local
     depends_on:
       - geoquiz-auth_service
       - geoquiz-api_service

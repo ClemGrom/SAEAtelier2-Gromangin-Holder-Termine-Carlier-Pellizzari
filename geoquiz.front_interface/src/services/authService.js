@@ -1,19 +1,27 @@
 import axios from 'axios';
 
+const apiPort = 50015;
+const baseURL = `http://${window.location.hostname}:${apiPort}/api`;
+
 const apiClient = axios.create({
-    baseURL: 'http://geoquiz-gateway/api',
-    withCredentials: true,
+    baseURL: baseURL,
+    withCredentials: false,
 });
 
 export default {
     async signUp(userData) {
         try {
+            console.log(userData);
             const response = await apiClient.post('/users/signup', userData);
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('refreshToken', response.data.refreshToken);
             return response.data;
         } catch (error) {
-            throw new Error(error.response.data.message || 'Erreur lors de l\'inscription');
+            if (error.response && error.response.data && error.response.data.error) {
+                throw new Error(error.response.data.error);
+            } else {
+                throw new Error(`Erreur lors de l'inscription: ${error.message}`);
+            }
         }
     },
 
@@ -24,7 +32,11 @@ export default {
             localStorage.setItem('refreshToken', response.data.refreshToken);
             return response.data;
         } catch (error) {
-            throw new Error(error.response.data.error || 'Erreur lors de la connexion');
+            if (error.response && error.response.data && error.response.data.error) {
+                throw new Error(error.response.data.error);
+            } else {
+                throw new Error('Erreur lors de la connexion');
+            }
         }
     }
 };
