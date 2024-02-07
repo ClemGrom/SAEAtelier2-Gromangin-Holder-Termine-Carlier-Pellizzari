@@ -28,6 +28,9 @@
 </template>
 
 <script>
+import authService from '@/services/authService';
+import router from '@/router';
+
 export default {
   data() {
     return {
@@ -36,9 +39,17 @@ export default {
     };
   },
   methods: {
-    loginUser() {
-      // logique pour traiter la connexion (envoi au backend...)
-      console.log('Utilisateur connecté:', this.username, this.password);
+    async loginUser() {
+      try {
+        const credentials = {
+          username: this.username,
+          password: this.password,
+        };
+        await authService.signIn(credentials);
+        await router.push('/dashboard');
+      } catch (error) {
+        console.error('Erreur lors de la connexion:', error.message);
+      }
     },
   },
 };

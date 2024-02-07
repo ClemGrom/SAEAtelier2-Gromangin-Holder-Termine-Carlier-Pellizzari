@@ -1,5 +1,6 @@
 <?php
 
+use geoquiz\gateway\app\action\MainAction;
 use geoquiz\gateway\app\action\UserActionOther;
 use geoquiz\gateway\app\action\UserActionSignUp;
 use geoquiz\gateway\app\action\UserActionSigIn;
@@ -22,6 +23,12 @@ return [
     UserActionSigIn::class => function (ContainerInterface $container) {
         return new UserActionSigIn(
             $container->get('uri.geoquizAuth'),
+            $container->get('uri.geoquizApi')
+        );
+    },
+
+    MainAction::class => function (ContainerInterface $container) {
+        return new MainAction(
             $container->get('uri.geoquizApi')
         );
     },

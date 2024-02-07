@@ -31,3 +31,5 @@
 [2024-02-07T15:10:04.453685+00:00] auth.WARNING: Auth attempt failed for maxime4570@gmail.com : User not found [] []
 [2024-02-07T15:11:00.785048+00:00] auth.WARNING: Auth attempt failed for maxime4570@gmail.com : User not found [] []
 [2024-02-07T15:13:21.650161+00:00] auth.WARNING: Auth attempt failed for maxime4570@gmail.com : User not found [] []
+[2024-02-07T15:50:34.469817+00:00] auth.WARNING: JWT expired: Expired jwt token [] []
+[2024-02-07T15:55:59.274900+00:00] auth.WARNING: JWT expired: Expired jwt token [] []
