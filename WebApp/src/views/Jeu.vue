@@ -43,7 +43,7 @@ export default {
     data() {
         return {
             osmURL: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            center: [48.694, 6.18],
+            center: [48.694, 6.18],// va changer avec dirctus
             zoom: 10,
             maxZoom: 18,
             minZoom: 1,
@@ -53,11 +53,13 @@ export default {
             score: 0,
             totalScore : 0,
             isMapExpanded: false,
-            imageCoordinates: [48.6936219, 6.1806664],
+            imageCoordinates: [48.6936219, 6.1806664],//achanger dans disrectus 
             currentRound: 1
         };
     },
     methods: {
+
+        // fetch api axios?
         startTimer() {
             if (!this.timerInterval) {
                 this.timerInterval = setInterval(() => {
