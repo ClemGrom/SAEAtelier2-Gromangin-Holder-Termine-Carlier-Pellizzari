@@ -99,7 +99,7 @@ services:
   geoquiz-series_directus:
     image: directus/directus:10.8.3
     ports:
-      - 8055:8055
+      - 50010:8055
     volumes:
       - ./geoquiz.series/uploads:/directus/uploads
     depends_on:
