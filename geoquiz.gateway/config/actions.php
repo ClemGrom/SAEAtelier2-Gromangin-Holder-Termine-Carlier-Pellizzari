@@ -20,7 +20,7 @@ return [
     },
 
     UserActionSigIn::class => function (ContainerInterface $container) {
-        return new UserActionOther(
+        return new UserActionSigIn(
             $container->get('uri.geoquizAuth'),
             $container->get('uri.geoquizApi')
         );

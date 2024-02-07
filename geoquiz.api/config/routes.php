@@ -7,6 +7,7 @@ use geoquiz\api\app\action\GameDetailsAction;
 use geoquiz\api\app\action\GameSubmitAction;
 use geoquiz\api\app\action\UserGamesListAction;
 use geoquiz\api\app\action\UserProfileAction;
+use geoquiz\api\app\action\UserGetUserFromEmail;
 
 use Slim\App;
 
@@ -54,6 +55,9 @@ return function( App $app):void {
             $app->post('/profile[/]', UserProfileAction::class)->add(
                 $app->getContainer()->get('checkOwnership')
             )->setName('user_profile');
+
+            //Get only user related infos
+            $app->get('/profile/{email}[/]', UserGetUserFromEmail::class)->setName('user_profile_get_only');
         });
 
     });

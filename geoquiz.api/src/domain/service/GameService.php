@@ -104,4 +104,10 @@ class GameService implements GameServiceInterface
         $user->save();
         return $user->toDTO();
     }
+
+    public function getUserDetails(string $email): UsersDTO
+    {
+        $this->logger->info('Getting user details');
+        return Users::where('email', $email)->first()->toDTO();
+    }
 }
