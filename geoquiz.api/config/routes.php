@@ -11,6 +11,7 @@ use geoquiz\api\app\action\UserProfileAction;
 use Slim\App;
 
 return function( App $app):void {
+
     $app->options('/{routes:.+}', function ($request, $response) {
         return $response;
     });
@@ -57,4 +58,5 @@ return function( App $app):void {
         });
 
     });
+
 };
