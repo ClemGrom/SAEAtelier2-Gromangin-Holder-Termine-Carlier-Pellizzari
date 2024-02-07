@@ -26,12 +26,21 @@
             </button>
             <h2>Temps restant : {{ timeRemaining }}</h2>
         </div>
+        <div v-if="isPaused" class="modal">
+            <div class="modal-content">
+                <h2>Jeu en pause</h2>
+                <button @click="toggleTimer">Reprendre</button>
+                <router-link :to="{path:'/'}"><button class="quitter">Quitter</button></router-link>
+                
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
 import 'leaflet/dist/leaflet.css';
 import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet';
+import Acceuil from './Acceuil.vue';
 
 export default {
     name: 'jeu',
@@ -51,7 +60,8 @@ export default {
             timeRemaining: 30,
             timerInterval: null,
             score: 0,
-            totalScore : 0,
+            isPaused: false,
+            totalScore: 0,
             isMapExpanded: false,
             imageCoordinates: [48.6936219, 6.1806664],//achanger dans disrectus 
             currentRound: 1
@@ -67,7 +77,7 @@ export default {
                         clearInterval(this.timerInterval);
                         this.currentRound++;
                         localStorage.setItem('currentRound', this.currentRound);
-                        
+
                         // Si l'utilisateur n'a pas cliqué sur le bouton "Envoyer"
                         if (!this.marker) {
                             // Ajouter 0 au score
@@ -89,11 +99,13 @@ export default {
         toggleTimer() {
             if (this.timerInterval) {
                 this.pauseTimer();
+                this.isPaused = true;
             } else {
                 this.startTimer();
+                this.isPaused = false;
             }
         },
-        
+
         redirectToFinRound() {
             if (this.currentRound >= 6) {
                 this.$router.push('/FinJeu');
@@ -125,7 +137,7 @@ export default {
         },
         updateScore(distance) {
             if (distance < 0.01) {
-                this.score = 5* this.timeRemaining;
+                this.score = 5 * this.timeRemaining;
             } else if (distance < 0.05) {
                 this.score = 5 * this.timeRemaining;
 
@@ -136,15 +148,15 @@ export default {
                 this.score = 0;
 
             }
-            this.totalScore +=this.score;
+            this.totalScore += this.score;
             localStorage.setItem('score', this.score);
-            localStorage.setItem('totalScore',this.totalScore);
+            localStorage.setItem('totalScore', this.totalScore);
         },
         onMapClick(event) {
-    this.marker = {
-        coordinates: [event.latlng.lat, event.latlng.lng]
-    };
-},
+            this.marker = {
+                coordinates: [event.latlng.lat, event.latlng.lng]
+            };
+        },
         beforeRouteLeave(to, from, next) {
             this.pauseTimer();
             this.timeRemaining = 30;
@@ -162,7 +174,7 @@ export default {
         if (savedScore) {
             this.score = Number(savedScore);
         }
-        if (savedTotalScore){
+        if (savedTotalScore) {
             this.totalScore = Number(savedTotalScore);
         }
     }
@@ -299,5 +311,53 @@ h2 {
 
 .custom-button:hover {
     background-color: #3fa670;
+}
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999; /* Assurez-vous que le popup apparaît au-dessus de tout le reste */
+}
+
+.modal-content {
+    background-color: #2B80B0 ;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.modal-content h2 {
+    margin-bottom: 10px;
+}
+
+.modal-content button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4AC78D;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 10px;
+}
+
+.modal-content button.quitter {
+    background-color: #ff0000; /* Rouge */
+}
+
+.modal-content button:hover {
+    background-color: #3fa670;
+}
+
+.modal-content button.quitter:hover {
+    background-color: #cc0000; /* Rouge foncé au survol */
 }
 </style>

@@ -11,8 +11,9 @@ class Users extends Model
     protected $table = 'users';
     protected $primaryKey = 'user_id';
     protected $keyType = 'string';
+    public $incrementing = false;
     public $timestamps = false;
-    protected $fillable = ['username', 'email', 'created_at', 'total_score', 'total_games_played'];
+    protected $fillable = ['user_id', 'username', 'email', 'created_at', 'total_score', 'total_games_played'];
 
     public function games(): HasMany
     {
