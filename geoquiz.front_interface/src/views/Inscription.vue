@@ -41,9 +41,9 @@ export default {
           email: this.email,
           password: this.password,
         };
-        const response = await authService.signUp(userData);
-        // Gérer la réponse de l'inscription ici
-        console.log('Utilisateur inscrit:', response);
+        authService.signUp(userData).then((response) => {
+          console.log('Utilisateur inscrit:', response);
+        });
       } catch (error) {
         console.error('Erreur lors de l\'inscription:', error.message);
       }
