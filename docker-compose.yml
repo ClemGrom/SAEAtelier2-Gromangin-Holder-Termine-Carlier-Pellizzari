@@ -4,6 +4,19 @@ networks:
     driver: bridge
 
 services:
+  geoquiz-gateway:
+      image: canals/php:8.2
+      container_name: gateway
+      volumes:
+        - ./geoquiz.gateway:/var/www
+        - ./geoquiz.gateway/public:/var/www/html
+      ports:
+        - "50010:80"
+      environment:
+        - APP_ENV=local
+      networks:
+        - geoquiz-network
+
   geoquiz-auth_service:
     image: canals/php:8.2
     container_name: auth_service

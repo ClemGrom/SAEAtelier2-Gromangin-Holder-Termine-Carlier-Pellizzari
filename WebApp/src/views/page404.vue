@@ -22,14 +22,24 @@ export default {
 }
 
 .display-4 {
-  font-size: 6rem;
+  font-size: 6vw;
   font-weight: bold;
   color: #dc3545;
 }
 
+h3 {
+  font-size: 3vw;
+  margin-bottom: 2vw;
+}
+
+p {
+  font-size: 2vw;
+  margin-bottom: 4vw;
+}
+
 img {
-  max-width: 100%;
+  max-width: 80%;
   height: auto;
-  margin-top: 20px;
+  margin-top: 5vw;
 }
 </style>

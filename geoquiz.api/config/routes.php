@@ -7,6 +7,7 @@ use geoquiz\api\app\action\GameDetailsAction;
 use geoquiz\api\app\action\GameSubmitAction;
 use geoquiz\api\app\action\UserGamesListAction;
 use geoquiz\api\app\action\UserProfileAction;
+use geoquiz\api\app\action\UserGetUserFromEmail;
 
 use Slim\App;
 
@@ -46,14 +47,17 @@ return function( App $app):void {
 
         $app->group('/users', function ($app) {
             // Route pour lister les parties d'un utilisateur
-            $app->get('/{userId}/games', UserGamesListAction::class)->add(
+            $app->get('/{userId}/games[/]', UserGamesListAction::class)->add(
                 $app->getContainer()->get('checkJwt')
             )->setName('user_games_list');
 
             //create user profile route without checkjwt check
-            $app->post('/profile', UserProfileAction::class)->add(
+            $app->post('/profile[/]', UserProfileAction::class)->add(
                 $app->getContainer()->get('checkOwnership')
             )->setName('user_profile');
+
+            //Get only user related infos
+            $app->get('/profile/{email}[/]', UserGetUserFromEmail::class)->setName('user_profile_get_only');
         });
 
     });
