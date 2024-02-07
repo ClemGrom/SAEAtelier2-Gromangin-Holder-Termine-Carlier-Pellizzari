@@ -4,7 +4,7 @@ import Acceuil from './views/Acceuil.vue';
 import Inscription from './views/Inscription.vue';
 import Connexion from './views/Connexion.vue';
 import page404 from './views/page404.vue';
-
+import createGame from './views/create-game.vue';
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -22,6 +22,11 @@ const router = createRouter({
             path: '/login',
             name: 'Connexion',
             component: Connexion,
+        },
+        {
+            path: '/create-game',
+            name: 'create-game',
+            component: createGame,
         },
         {
             path: '/:pathMatch(.*)*',
