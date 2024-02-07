@@ -51,123 +51,122 @@ export default {
             timeRemaining: 30,
             timerInterval: null,
             score: 0,
+            totalScore : 0,
             isMapExpanded: false,
             imageCoordinates: [48.6936219, 6.1806664],
             currentRound: 1
         };
     },
     methods: {
-        // Méthode pour récupérer les données de localStorage
-        retrieveData() {
-            const savedScore = localStorage.getItem('score');
-            const savedRound = localStorage.getItem('round');
-            if (savedScore && savedRound) {
-                this.score = parseInt(savedScore);
-                this.currentRound = parseInt(savedRound);
+        startTimer() {
+            if (!this.timerInterval) {
+                this.timerInterval = setInterval(() => {
+                    if (this.timeRemaining === 0) {
+                        clearInterval(this.timerInterval);
+                        this.currentRound++;
+                        localStorage.setItem('currentRound', this.currentRound);
+                        
+                        // Si l'utilisateur n'a pas cliqué sur le bouton "Envoyer"
+                        if (!this.marker) {
+                            // Ajouter 0 au score
+                            this.updateScore(1);
+                        }
+                        this.redirectToFinRound();
+                    } else {
+                        this.timeRemaining--;
+                    }
+                }, 1000);
             }
         },
-        // Méthode pour sauvegarder les données dans localStorage
-        saveData() {
-            localStorage.setItem('score', this.score.toString());
-            localStorage.setItem('round', this.currentRound.toString());
-        },
-        onMapClick(event) {
-    if (!this.marker) {
-        this.marker = {
-            coordinates: [event.latlng.lat, event.latlng.lng]
-        };
-    } else {
-        // Remplacez le marqueur existant par le nouveau
-        this.marker.coordinates = [event.latlng.lat, event.latlng.lng];
-    }
-},
-        toggleTimer() {
+        pauseTimer() {
             if (this.timerInterval) {
                 clearInterval(this.timerInterval);
                 this.timerInterval = null;
-                this.redirectToFinRound(); // Redirection vers la fin du tour lorsque le temps est mis en pause
+            }
+        },
+        toggleTimer() {
+            if (this.timerInterval) {
+                this.pauseTimer();
             } else {
                 this.startTimer();
             }
         },
-        startTimer() {
-            this.timerInterval = setInterval(() => {
-                if (this.timeRemaining === 0) { // Utilisation de === pour une comparaison stricte
-                    clearInterval(this.timerInterval);
-                    this.currentRound++; // Utilisation de this.currentRound pour accéder à la propriété de l'instance
-                    this.redirectToFinRound();
-                } else {
-                    this.timeRemaining--; // Redirection vers la fin du tour lorsque le temps est écoulé
-                }
-            }, 1000);
+        
+        redirectToFinRound() {
+            if (this.currentRound >= 6) {
+                this.$router.push('/FinJeu');
+            } else {
+                this.$router.push('/FinRound');
+            }
         },
 
-        redirectToFinRound() {
-            // Redirection vers la fin du tour
-            this.$router.push('/FinRound');
-        },
-        expandMap() {
-            this.isMapExpanded = true;
-        },
-        shrinkMap() {
-            this.isMapExpanded = false;
-        },
         checkDistance() {
             if (this.marker) {
-                // Calculez la distance entre les coordonnées du marqueur et les coordonnées de l'image associée
                 const distance = this.calculateDistance(this.marker.coordinates, this.imageCoordinates);
-                // Mettez à jour le score en fonction de la proximité du marqueur avec les coordonnées de l'image
-                // Vous pouvez ajuster cette logique en fonction de vos besoins spécifiques
                 this.updateScore(distance);
-                // Réinitialisez le marqueur pour permettre au joueur de placer un nouveau marqueur pour le prochain tour
                 this.marker = null;
-                // Passez au tour suivant si nécessaire
-                if (this.currentRound < 5) {
+                if (this.currentRound < 6) {
                     this.currentRound++;
-                } else {
-                    // Rediriger vers FinJeu.vue si le nombre de tours dépasse 5
+                    // Save the number of rounds in LocalStorage
+                    localStorage.setItem('currentRound', this.currentRound);
+                    this.pauseTimer();
+                    this.timeRemaining = 30;
+                }
+                // Check if currentRound is greater than or equal to 5 after incrementing it
+                if (this.currentRound >= 6) {
                     this.$router.push('/FinJeu');
                 }
-
-            } else {
-                console.log("Veuillez placer un marqueur avant d'envoyer.");
             }
         },
         calculateDistance(coord1, coord2) {
-            // Implémentez la fonction de calcul de la distance entre deux paires de coordonnées
-            // Par exemple, vous pouvez utiliser la formule de la distance euclidienne ou d'autres méthodes de calcul de distance géographique
-            // Cette fonction doit retourner la distance calculée
             return Math.sqrt(Math.pow(coord1[0] - coord2[0], 2) + Math.pow(coord1[1] - coord2[1], 2));
         },
         updateScore(distance) {
-            // Mettez à jour le score en fonction de la distance calculée
-            // Vous pouvez ajuster cette logique en fonction de vos besoins spécifiques
             if (distance < 0.01) {
-                this.score += 5; // Score maximum si le marqueur est très proche de l'image
-            } else {
-                this.score += 3; // Score partiel si le marqueur est proche mais pas exactement sur l'image
+                this.score = 5* this.timeRemaining;
+            } else if (distance < 0.05) {
+                this.score = 5 * this.timeRemaining;
+
+            } else if (distance < 0.1) {
+                this.score = 1 * this.timeRemaining;
             }
-        }
+            else {
+                this.score = 0;
+
+            }
+            this.totalScore +=this.score;
+            localStorage.setItem('score', this.score);
+            localStorage.setItem('totalScore',this.totalScore);
+        },
+        onMapClick(event) {
+    this.marker = {
+        coordinates: [event.latlng.lat, event.latlng.lng]
+    };
+},
+        beforeRouteLeave(to, from, next) {
+            this.pauseTimer();
+            this.timeRemaining = 30;
+            next();
+        },
     },
     mounted() {
-        this.retrieveData(); // Récupérer les données sauvegardées lors du chargement du composant
         this.startTimer();
-    },
-    watch: {
-        // Surveiller les changements de score et de tour et les sauvegarder automatiquement
-        score: function (newScore) {
-            this.saveData();
-        },
-        currentRound: function (newRound) {
-            this.saveData();
-            // Rediriger vers FinJeu.vue si le nombre de tours dépasse 5
-            if (newRound >= 5) {
-                this.$router.push('/FinJeu');
-            }
+        const savedRound = localStorage.getItem('currentRound');
+        const savedTotalScore = localStorage.getItem('totalScore');
+        const savedScore = localStorage.getItem('score');
+        if (savedRound) {
+            this.currentRound = Number(savedRound);
+        }
+        if (savedScore) {
+            this.score = Number(savedScore);
+        }
+        if (savedTotalScore){
+            this.totalScore = Number(savedTotalScore);
         }
     }
 };
 </script>
+
 
 <style scoped>
 .greetings {

@@ -6,9 +6,7 @@
   
       <div class="gameScore">
         <div class="scoreText"> Score Final : </div>
-        <div class="round">Round {{ round }}/5</div>
-        <div class="scoreText">Votre score :</div>
-        <div class="score">{{ score }}</div>
+        <div class="score">{{ totalScore}}</div>
       </div>
   
       <footer>
@@ -25,17 +23,18 @@
     data() {
       return {
         score: parseInt(localStorage.getItem('score')) || 0,
-        round: parseInt(localStorage.getItem('round')) || 1
+        round: parseInt(localStorage.getItem('round')) || 1,
+        totalScore: parseInt(localStorage.getItem('totalScore'))|| 0,
       };
     },
     methods: {
       resetScoreAndRound() {
         // Réinitialiser le score et le round par défaut
-        localStorage.setItem('score', '0');
-        localStorage.setItem('round', '1');
+        localStorage.clear();
         // Mettre à jour les données du composant
         this.score = 0;
         this.round = 1;
+        this.totalScore =0;
       }
     }
   };
