@@ -11,7 +11,7 @@ services:
         - ./geoquiz.gateway:/var/www
         - ./geoquiz.gateway/public:/var/www/html
       ports:
-        - "50010:80"
+        - "50015:80"
       environment:
         - APP_ENV=local
       networks:
