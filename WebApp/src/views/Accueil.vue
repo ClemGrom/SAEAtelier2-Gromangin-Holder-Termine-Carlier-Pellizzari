@@ -12,22 +12,59 @@
         <router-link to="/profile" class="profile-link"><img src="@/assets/utilisateur.png" alt="logo utilisateur" class="logo-utilisateur"></router-link>
       </div>
     </nav>
-    <div class="game-intro">
+    <div class="game-intro" v-if="windowWidth > 780">
       <p>
-        Bienvenue sur GeoQuizz ! le jeu captivant où vous devez placer avec précision des photos sur la carte de votre ville plus rapidement que les autres joueurs.
+        Bienvenue sur GeoQuizz ! le jeu captivant où vous devez placer avec précision des photos sur la carte de votre ville le plus rapidement possible.
       </p>
       <p1>
         Vous êtes prêt à relever le défi ?
       </p1>
-      <router-link to="/create-game" class="cta-button bigger-button mobile-only btn btn-primary w-100">Crée une partie !</router-link>
-    <button class="showRules cta-button mobile-only btn btn-primary" @click="showRules = true">Afficher les règles</button>
+      <router-link to="/create-game" class="cta-button bigger-button mobile-only btn btn-primary">Crée une partie !</router-link>
+      <router-link to="/create-game" class="cta-button bigger-button screen-only">Crée une partie !</router-link>
     </div>
+
+
+
+    <div v-else>
+      <div class="display-3"> Bienvenue sur GeoQuizz ! le jeu captivant où vous devez placer avec précision des photos sur la carte de votre ville le plus rapidement possible.</div>
+      <div class="display-4" style="color: red;"> Vous êtes prêt à relever le défi ?</div>
+      <router-link to="/create-game" class="cta-button bigger-button mobile-only btn btn-primary">Crée une partie !</router-link>
+
+      <h2>Principe et règles du jeu</h2>
+
+      <ul>
+        <li>Une partie consiste en une séquence de 10 photos aléatoires d'une même série, à placer sur la carte de la ville.</li>
+        <li>Chaque série regroupe des photos de la même ville et de la même carte.</li>
+        <li>Vous gagnez des points en fonction de la précision du placement et de la rapidité de votre réponse.</li>
+        <li>L'objectif est d'obtenir le maximum de points au cours d'une partie de 10 photos.</li>
+        <li>La partie se termine une fois que toutes les 10 photos ont été positionnées.</li>
+      </ul>
+
+      <h2>Calculer ses points</h2>
+
+      <p><strong>Placement des marqueurs</strong></p>
+
+      <ul>
+        <li>pour 1 marqueur placée à une distance &lt; D : <span class="point-value">5pts</span></li>
+        <li>pour 1 marqueur placée à une distance &lt; 2D : <span class="point-value">3pts</span></li>
+        <li>pour 1 marqueur placée à une distance &lt; 3D : <span class="point-value">1pts</span></li>
+      </ul>
+
+      <p><strong>Prise en compte de la rapidité</strong></p>
+
+      <ul>
+        <li>les points sont multipliés par 4 pour une réponse en moins de 5s</li>
+        <li>les points sont multipliés par 2 pour 1 réponse en moins de 10s</li>
+        <li>les points ne sont pas acquis pour 1 réponse en plus de 20s</li>
+      </ul>
+    </div>
+
+
 
     <div class="game-principles">
       <GamePrinciples />
     </div>
     <div class="illustration-section">
-      <router-link to="/create-game" class="cta-button bigger-button screen-only">Crée une partie !</router-link>
       <img src="@/assets/mapNancy.jpeg" alt="Illustration du jeu" class="illustration-image" />
     </div>
   </div>
@@ -43,14 +80,21 @@ export default {
   },
   data() {
     return {
-      showRules: false,
+      windowWidth: window.innerWidth
     };
   },
-  methods: {
-    toggleRulesDisplay() {
-      this.showRules = !this.showRules;
-    },
+  created() {
+    window.addEventListener('resize', this.handleResize);
+    this.handleResize();
   },
+  destroyed() {
+    window.removeEventListener('resize', this.handleResize);
+  },
+  methods: {
+    handleResize() {
+      this.windowWidth = window.innerWidth;
+    }
+  }
 };
 </script>
 
@@ -68,6 +112,7 @@ body {
   color: #ecf0f1;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  font-size: 18px;
 }
 
 nav {
@@ -75,6 +120,8 @@ nav {
   justify-content: space-between;
   align-items: center;
   grid-column: 1/3;
+  font-size: 16px;
+  margin-top: -25px;
 }
 
 .header {
@@ -112,15 +159,26 @@ nav {
   background-color: #2980b9;
 }
 
-.game-intro {
-  margin-left: 350px;
-  width: 100%;
-  margin-bottom: 50px;
-  margin-top: 20px;
-  font-size: 20px;
+.profile-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
 }
 
-.game-intro p1 {
+.game-intro {
+  width: 100%;
+  margin-bottom: 50px;
+  margin-left: 40%;
+  margin-right: 40%;
+}
+
+p{
+  font-size: 20px;
+  margin-bottom: 40px;
+}
+
+p1 {
   font-size: 20px;
   color: red;
   font-weight: bold;
@@ -145,31 +203,26 @@ nav {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: white;
-  padding: 20px;
-  border-radius: 20px;
 }
 
 .illustration-image {
   max-width: 100%;
-  height: auto;
-  margin-bottom: 20px;
+  height: 100%;
+  object-fit: cover;
 }
 
 .bigger-button {
-  font-size: 24px;
+  font-size: 20px;
 }
 .mobile-only {
   display: none;
 }
 
-.screen-only {
-  display: block;
-}
-
 .showRules {
   background-color: gray;
 }
+
+
 
 @media (max-width: 1300px) {
   .home-container {
@@ -187,8 +240,7 @@ nav {
   }
 
   .game-principles {
-    order: 2;
-    display: none;
+    order: 2; 
   }
 
   .mobile-only {
@@ -198,29 +250,35 @@ nav {
   .screen-only {
     display: none;
   }
+
+  .illustration-image{
+    display: none;
+  }
 }
 
-@media (max-width: 840px) {
+@media (max-width: 780px) {
   .home-container {
     grid-template-columns: 1fr;
   }
 
+  .game-intro {
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+  }
+
   nav {
     flex-direction: column;
+    align-items: center;
   }
 
-  .header,
   .user-actions {
-    justify-content: center;
-    margin-bottom: 10px;
+    flex-direction: column;
+    gap: 20px;
   }
 
-  .game-intro {
-    order: 1;
-  }
-
-  .illustration-section {
-    display:none;
+  .game-principles {
+    display: none;
   }
 }
 </style>

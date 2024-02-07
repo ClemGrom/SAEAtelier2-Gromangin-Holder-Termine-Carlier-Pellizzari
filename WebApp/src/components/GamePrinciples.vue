@@ -132,7 +132,7 @@ body {
 
 
 .game-rules {
-  font-size: 18px;
+  font-size: 1.2em;
 }
 
 .game-rules li {
@@ -141,7 +141,7 @@ body {
 }
 
 .game-rules p {
-  font-size: 20px;
+  font-size: 1.3em;
   margin-bottom: 10px;
   text-align: left;
 }
