@@ -46,6 +46,9 @@
         font-family: "Lalezar", system-ui;
         font-weight: 400;
     }
+    button {
+  text-decoration: none;
+}
 
     #container {
         background-color: #2c3e50;
@@ -111,6 +114,7 @@
         align-items: center;
         margin-right: 20px;
         margin-left: 20px;
+        text-decoration: none;
     }
 
     .share {

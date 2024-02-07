@@ -1,6 +1,6 @@
 <template>
     <div class="greetings">
-        <img src="@/assets/placestan.jpg" alt="Place Stanislas" class="game-image" />
+        <img :src="`@/assets/${backgroundImage}`" alt="Image du Jeu" class="game-image" />
 
         <div class="logo">
             <img src="@/assets/game_logo.jpg" alt="Game Logo" class="game-logo" />
@@ -30,8 +30,8 @@
             <div class="modal-content">
                 <h2>Jeu en pause</h2>
                 <button @click="toggleTimer">Reprendre</button>
-                <router-link :to="{path:'/'}"><button class="quitter">Quitter</button></router-link>
-                
+                <router-link :to="{ path: '/' }"><button class="quitter">Quitter</button></router-link>
+
             </div>
         </div>
     </div>
@@ -40,7 +40,7 @@
 <script>
 import 'leaflet/dist/leaflet.css';
 import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet';
-import Acceuil from './Acceuil.vue';
+
 
 export default {
     name: 'jeu',
@@ -63,13 +63,15 @@ export default {
             isPaused: false,
             totalScore: 0,
             isMapExpanded: false,
-            imageCoordinates: [48.6936219, 6.1806664],//achanger dans disrectus 
-            currentRound: 1
+            currentRound: 1,
+            lieux: [],
+            currentLieu: null,
+            imageCoordinates: null,
+            backgroundImage: null,
+
         };
     },
     methods: {
-
-        // fetch api axios?
         startTimer() {
             if (!this.timerInterval) {
                 this.timerInterval = setInterval(() => {
@@ -88,6 +90,16 @@ export default {
                         this.timeRemaining--;
                     }
                 }, 1000);
+            }
+        },
+        updateImageCoordinates() {
+            if (this.currentLieu && this.currentLieu.localisation) {
+                this.imageCoordinates = this.currentLieu.localisation.coordinates;
+            }
+        },
+        updateBackgroundImage() {
+            if (this.currentLieu && this.currentLieu.image) {
+                this.backgroundImage = this.currentLieu.image;
             }
         },
         pauseTimer() {
@@ -177,6 +189,14 @@ export default {
         if (savedTotalScore) {
             this.totalScore = Number(savedTotalScore);
         }
+
+        let storedLieux = localStorage.getItem('infosLieux');
+        if (storedLieux) {
+            this.lieux = JSON.parse(storedLieux);
+            this.currentLieu = this.lieux[0]; // Prendre le premier lieu
+            this.updateImageCoordinates(); // Mettre à jour les coordonnées de l'image
+            this.updateBackgroundImage(); // Mettre à jour l'image de fond
+        }
     }
 };
 </script>
@@ -186,7 +206,9 @@ export default {
 .greetings {
     position: relative;
 }
-
+button {
+  text-decoration: none;
+}
 .logo {
     display: flex;
     align-items: center;
@@ -312,6 +334,7 @@ h2 {
 .custom-button:hover {
     background-color: #3fa670;
 }
+
 .modal {
     position: fixed;
     top: 0;
@@ -322,11 +345,12 @@ h2 {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 999; /* Assurez-vous que le popup apparaît au-dessus de tout le reste */
+    z-index: 999;
+    /* Assurez-vous que le popup apparaît au-dessus de tout le reste */
 }
 
 .modal-content {
-    background-color: #2B80B0 ;
+    background-color: #2B80B0;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
@@ -350,7 +374,8 @@ h2 {
 }
 
 .modal-content button.quitter {
-    background-color: #ff0000; /* Rouge */
+    background-color: #ff0000;
+    /* Rouge */
 }
 
 .modal-content button:hover {
@@ -358,6 +383,6 @@ h2 {
 }
 
 .modal-content button.quitter:hover {
-    background-color: #cc0000; /* Rouge foncé au survol */
-}
-</style>
+    background-color: #cc0000;
+    /* Rouge foncé au survol */
+}</style>

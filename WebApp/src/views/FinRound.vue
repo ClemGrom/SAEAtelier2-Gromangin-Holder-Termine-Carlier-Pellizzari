@@ -37,6 +37,9 @@
         font-family: "Lalezar", system-ui;
         font-weight: 400;
     }
+    button {
+  text-decoration: none;
+}
 
     #container {
         background-color: #2c3e50;
@@ -110,10 +113,12 @@
         justify-content: center;
         align-items: center;
         margin-right: 20px;
+        text-decoration: none;
     }
 
     .quit {
         height: 30px;
         margin-left: 20px;
+        
     }
 </style>
