@@ -14,7 +14,6 @@ services:
       - "50020:80"
     environment:
       - APP_ENV=local
-    restart: always
     depends_on:
       - geoquiz-auth_db
     networks:
@@ -30,7 +29,6 @@ services:
       MYSQL_PASSWORD: PierreAndreGuenego
     ports:
       - "50019:3306"
-    restart: always
     networks:
       - geoquiz-network
 
