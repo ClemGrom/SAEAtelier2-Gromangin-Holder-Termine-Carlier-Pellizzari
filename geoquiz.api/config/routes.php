@@ -46,12 +46,12 @@ return function( App $app):void {
 
         $app->group('/users', function ($app) {
             // Route pour lister les parties d'un utilisateur
-            $app->get('/{userId}/games', UserGamesListAction::class)->add(
+            $app->get('/{userId}/games[/]', UserGamesListAction::class)->add(
                 $app->getContainer()->get('checkJwt')
             )->setName('user_games_list');
 
             //create user profile route without checkjwt check
-            $app->post('/profile', UserProfileAction::class)->add(
+            $app->post('/profile[/]', UserProfileAction::class)->add(
                 $app->getContainer()->get('checkOwnership')
             )->setName('user_profile');
         });

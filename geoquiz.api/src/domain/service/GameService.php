@@ -88,8 +88,18 @@ class GameService implements GameServiceInterface
         })->toArray();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function createUser(UsersDTO $user): UsersDTO
     {
+        //does the user already exist? if not, we create a new one | throw an exception if the user already exists
+        if (Users::where('email', $user->email)->exists()) {
+            throw new \Exception('User already exists');
+        }
+
+        $this->logger->info('Creating user');
+
         $user = $user->toModel();
         $user->save();
         return $user->toDTO();
