@@ -2,7 +2,6 @@
   <div class="container">
     <h2>Connexion</h2>
     <form @submit.prevent="loginUser">
-      <!-- Champs du formulaire -->
       <label for="username">Nom d'utilisateur:</label>
       <input v-model="username" type="text" id="username" name="username" required>
 
@@ -13,7 +12,7 @@
 
       <p>Pas encore de compte? <router-link to="/register">Inscrivez-vous ici</router-link></p>
 
-      <router-link to="/" class="cta-button back-link">
+      <router-link to="/" class="back-link">
         <span class="arrow">&larr;</span> Retour à l'accueil
       </router-link>
     </form>
@@ -39,26 +38,40 @@ export default {
 
 <style scoped>
 .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  text-align: center;
   padding: 20px;
 }
 
 form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 100%;
 }
 
 label {
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
 input {
-  margin-bottom: 10px;
-  padding: 8px;
+  margin-bottom: 20px;
+  padding: 10px;
   border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+}
+
+button:hover {
+  background-color: #45a049;
 }
 
 .back-link {
