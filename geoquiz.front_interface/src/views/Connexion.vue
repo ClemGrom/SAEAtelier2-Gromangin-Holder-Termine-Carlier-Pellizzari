@@ -4,9 +4,9 @@
       <h2>Connexion</h2>
       <form @submit.prevent="loginUser">
         <div class="form-group">
-          <label for="username">Nom d'utilisateur:</label>
+          <label for="username">Email d'utilisateur:</label>
           <div class="input-group">
-            <input v-model="username" type="text" id="username" name="username" placeholder="Nom d'utilisateur" required>
+            <input v-model="email" type="text" id="username" name="username" placeholder="Nom d'utilisateur" required>
             <i class="fas fa-user"></i>
           </div>
         </div>
@@ -34,7 +34,7 @@ import router from '@/router';
 export default {
   data() {
     return {
-      username: '',
+      email: '',
       password: '',
     };
   },
@@ -42,11 +42,13 @@ export default {
     async loginUser() {
       try {
         const credentials = {
-          username: this.username,
+          email: this.email,
           password: this.password,
         };
-        await authService.signIn(credentials);
-        await router.push('/dashboard');
+        authService.signIn(credentials).then((response) => {
+          console.log('Utilisateur connecté:', response);
+          router.push('/dashboard');
+        });
       } catch (error) {
         console.error('Erreur lors de la connexion:', error.message);
       }

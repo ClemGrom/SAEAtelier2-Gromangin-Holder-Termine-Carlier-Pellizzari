@@ -11,7 +11,6 @@ const apiClient = axios.create({
 export default {
     async signUp(userData) {
         try {
-            console.log(userData);
             const response = await apiClient.post('/users/signup', userData);
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('refreshToken', response.data.refreshToken);
@@ -27,7 +26,11 @@ export default {
 
     async signIn(credentials) {
         try {
-            const response = await apiClient.post('/users/signin', credentials);
+            const response = await apiClient.post('/users/signin', null, {
+                headers: {
+                    "Authorization": "Basic " + btoa(credentials.email + ":" + credentials.password),
+                }
+            });
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('refreshToken', response.data.refreshToken);
             return response.data;
