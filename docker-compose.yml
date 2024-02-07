@@ -4,6 +4,19 @@ networks:
     driver: bridge
 
 services:
+  geoquiz-gateway:
+      image: canals/php:8.2
+      container_name: gateway
+      volumes:
+        - ./geoquiz.gateway:/var/www
+        - ./geoquiz.gateway/public:/var/www/html
+      ports:
+        - "50010:80"
+      environment:
+        - APP_ENV=local
+      networks:
+        - geoquiz-network
+
   geoquiz-auth_service:
     image: canals/php:8.2
     container_name: auth_service
@@ -14,7 +27,6 @@ services:
       - "50020:80"
     environment:
       - APP_ENV=local
-    restart: always
     depends_on:
       - geoquiz-auth_db
     networks:
@@ -30,7 +42,6 @@ services:
       MYSQL_PASSWORD: PierreAndreGuenego
     ports:
       - "50019:3306"
-    restart: always
     networks:
       - geoquiz-network
 
@@ -101,7 +112,7 @@ services:
   geoquiz-series_directus:
     image: directus/directus:10.8.3
     ports:
-      - 8055:8055
+      - 50010:8055
     volumes:
       - ./geoquiz.series/uploads:/directus/uploads
     depends_on:

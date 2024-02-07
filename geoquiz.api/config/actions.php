@@ -5,6 +5,7 @@ use geoquiz\api\app\action\GameCreateAction;
 use geoquiz\api\app\action\GameDetailsAction;
 use geoquiz\api\app\action\GameSubmitAction;
 use geoquiz\api\app\action\UserGamesListAction;
+use geoquiz\api\app\action\UserGetUserFromEmail;
 use geoquiz\api\app\action\UserProfileAction;
 use Psr\Container\ContainerInterface;
 
@@ -32,6 +33,10 @@ return [
 
     UserProfileAction::class => function (ContainerInterface $container) {
         return new UserProfileAction($container->get('game.service'));
-    }
+    },
+
+    UserGetUserFromEmail::class => function (ContainerInterface $container) {
+        return new UserGetUserFromEmail($container->get('game.service'));
+    },
 
 ];

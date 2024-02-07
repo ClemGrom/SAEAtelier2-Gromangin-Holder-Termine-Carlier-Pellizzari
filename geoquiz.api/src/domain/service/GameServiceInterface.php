@@ -28,4 +28,7 @@ interface GameServiceInterface
     // Create a new user
     public function createUser(UsersDTO $user): UsersDTO;
 
+    // Get the user details from the user uuid
+    public function getUserDetails(string $email): UsersDTO;
+
 }
