@@ -5,7 +5,7 @@
       </nav>
   
       <div class="gameScore">
-        <div class="round">Round {{ round }}/5</div>
+        <div class="round">Round {{ round -1}}/5</div>
         <div class="scoreText">Votre score :</div>
         <div class="score">{{ score }}</div>
       </div>
