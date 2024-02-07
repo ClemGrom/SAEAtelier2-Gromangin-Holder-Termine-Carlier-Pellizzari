@@ -23,6 +23,8 @@
 </template>
 
 <script>
+import authService from '@/services/authService';
+
 export default {
   data() {
     return {
@@ -32,9 +34,19 @@ export default {
     };
   },
   methods: {
-    registerUser() {
-      // logique pour traiter l'inscription (envoi au backend...)
-      console.log('Utilisateur inscrit:', this.username, this.email, this.password);
+    async registerUser() {
+      try {
+        const userData = {
+          username: this.username,
+          email: this.email,
+          password: this.password,
+        };
+        const response = await authService.signUp(userData);
+        // Gérer la réponse de l'inscription ici
+        console.log('Utilisateur inscrit:', response);
+      } catch (error) {
+        console.error('Erreur lors de l\'inscription:', error.message);
+      }
     },
   },
 };
