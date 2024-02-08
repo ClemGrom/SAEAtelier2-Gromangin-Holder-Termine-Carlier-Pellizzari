@@ -52,6 +52,9 @@ export default {
       infosSeries: null,
       infosSeries_Lieux: null,
       infosLieux: null,
+      apiClient: axios.create({
+        withCredentials: false
+      })
     };
   },
   methods: {
@@ -66,11 +69,8 @@ export default {
      * @return: inutilisable
      */
     getSeries() {
-      const apiClient = axios.create({
-        withCredentials: false,
-      });
       this.loading = true;
-      apiClient.get('http://docketu.iutnc.univ-lorraine.fr:50010/items/Serie')
+      this.apiClient.get('http://docketu.iutnc.univ-lorraine.fr:50010/items/Serie')
           .then(response => {
             this.infosSeries = response.data;
           })
@@ -90,10 +90,11 @@ export default {
      */
     getLieux(id) {
       this.loading = true;
-      axios
+      this.apiClient
           .get(`http://docketu.iutnc.univ-lorraine.fr:50010/items/Serie_Lieu?filter[Serie_id][_eq]=${id}`)
           .then(response => {
             this.infosSeries_Lieux = response.data;
+            console.log(this.infosSeries_Lieux);
           })
           .catch(error => {
             console.log(error)
@@ -105,7 +106,7 @@ export default {
       for (let i = 0; i < this.infosSeries_Lieux.length; i++) {
         lieux.push(this.infosSeries_Lieux[i].Lieu_id);
       }
-      axios.get('http://docketu.iutnc.univ-lorraine.fr:50010/items/Lieu?filter[id][_in]=' + lieux.join(','))
+      this.apiClient.get('http://docketu.iutnc.univ-lorraine.fr:50010/items/Lieu?filter[id][_in]=' + lieux.join(','))
           .then(response => {
             this.infosLieux = response.data;
             const serieActuelle = this.infosSeries.find(serie => serie.id === id);
