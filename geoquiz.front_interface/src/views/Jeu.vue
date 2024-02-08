@@ -30,8 +30,8 @@
             <div class="modal-content">
                 <h2>Jeu en pause</h2>
                 <button @click="toggleTimer">Reprendre</button>
-                <router-link :to="{path:'/'}"><button class="quitter">Quitter</button></router-link>
-                
+                <router-link :to="{ path: '/' }"><button class="quitter">Quitter</button></router-link>
+
             </div>
         </div>
     </div>
@@ -40,7 +40,6 @@
 <script>
 import 'leaflet/dist/leaflet.css';
 import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet';
-import Acceuil from './Accueil.vue';
 
 export default {
     name: 'jeu',
@@ -52,8 +51,8 @@ export default {
     data() {
         return {
             osmURL: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            center: [48.694, 6.18],// va changer avec dirctus
-            zoom: 10,
+            center: [0, 0],
+            zoom: 1,
             maxZoom: 18,
             minZoom: 1,
             marker: null,
@@ -63,13 +62,60 @@ export default {
             isPaused: false,
             totalScore: 0,
             isMapExpanded: false,
-            imageCoordinates: [48.6936219, 6.1806664],//achanger dans disrectus 
-            currentRound: 1
+            imageCoordinates: [48.6936219, 6.1806664],
+            currentRound: 1,
+            lieux: [], // Variable pour stocker les données des lieux
+            currentLieuIndex: 0, // Index du lieu actuel
+            infosSeries: null,
+            currentSerie: null,
+
         };
     },
-    methods: {
+    mounted() {
+        this.startTimer();
 
-        // fetch api axios?
+        try {
+            const infosSeries = localStorage.getItem('infosSeries');
+            if (infosSeries) {
+                const parsedInfosSeries = JSON.parse(infosSeries);
+                this.zoom = parsedInfosSeries.defaultZoom;
+                this.center = [parsedInfosSeries.defaultLat, parsedInfosSeries.defaultLong];
+                this.minZoom = parsedInfosSeries.minZoom;
+                this.maxZoom = parsedInfosSeries.maxZoom;
+            } else {
+                console.error('Aucune donnée de série n\'a été trouvée dans le localStorage.');
+            }
+        } catch (error) {
+            console.error('Erreur lors de la récupération des données par défaut :', error);
+        }
+
+        const savedRound = localStorage.getItem('currentRound');
+        const savedTotalScore = localStorage.getItem('totalScore');
+        const savedScore = localStorage.getItem('score');
+        if (savedRound) {
+            this.currentRound = Number(savedRound);
+        }
+        if (savedScore) {
+            this.score = Number(savedScore);
+        }
+        if (savedTotalScore) {
+            this.totalScore = Number(savedTotalScore);
+        }
+
+        const infosLieux = localStorage.getItem('infosLieux');
+        if (infosLieux) {
+            const parsedInfosLieux = JSON.parse(infosLieux);
+            if (parsedInfosLieux.data && Array.isArray(parsedInfosLieux.data)) {
+                this.lieux = parsedInfosLieux.data;
+                this.loadNewLocation();
+            } else {
+                console.error('Les données du localStorage ne sont pas au format attendu.');
+            }
+        } else {
+            console.error('Aucune donnée de lieu n\'a été trouvée dans le localStorage.');
+        }
+    },
+    methods: {
         startTimer() {
             if (!this.timerInterval) {
                 this.timerInterval = setInterval(() => {
@@ -78,9 +124,7 @@ export default {
                         this.currentRound++;
                         localStorage.setItem('currentRound', this.currentRound);
 
-                        // Si l'utilisateur n'a pas cliqué sur le bouton "Envoyer"
                         if (!this.marker) {
-                            // Ajouter 0 au score
                             this.updateScore(1);
                         }
                         this.redirectToFinRound();
@@ -94,6 +138,7 @@ export default {
             if (this.timerInterval) {
                 clearInterval(this.timerInterval);
                 this.timerInterval = null;
+                console.log(this.imageCoordinates);
             }
         },
         toggleTimer() {
@@ -105,7 +150,6 @@ export default {
                 this.isPaused = false;
             }
         },
-
         redirectToFinRound() {
             if (this.currentRound >= 6) {
                 this.$router.push('/FinJeu');
@@ -113,7 +157,6 @@ export default {
                 this.$router.push('/FinRound');
             }
         },
-
         checkDistance() {
             if (this.marker) {
                 const distance = this.calculateDistance(this.marker.coordinates, this.imageCoordinates);
@@ -121,12 +164,11 @@ export default {
                 this.marker = null;
                 if (this.currentRound < 6) {
                     this.currentRound++;
-                    // Save the number of rounds in LocalStorage
                     localStorage.setItem('currentRound', this.currentRound);
                     this.pauseTimer();
                     this.timeRemaining = 30;
+                    this.loadNewLocation(); // Charger un nouveau lieu à deviner
                 }
-                // Check if currentRound is greater than or equal to 5 after incrementing it
                 if (this.currentRound >= 6) {
                     this.$router.push('/FinJeu');
                 }
@@ -140,13 +182,10 @@ export default {
                 this.score = 5 * this.timeRemaining;
             } else if (distance < 0.05) {
                 this.score = 5 * this.timeRemaining;
-
             } else if (distance < 0.1) {
                 this.score = 1 * this.timeRemaining;
-            }
-            else {
+            } else {
                 this.score = 0;
-
             }
             this.totalScore += this.score;
             localStorage.setItem('score', this.score);
@@ -162,35 +201,44 @@ export default {
             this.timeRemaining = 30;
             next();
         },
+        loadNewLocation() {
+            if (this.currentLieuIndex < this.lieux.length) {
+                this.currentLieu = this.lieux[this.currentLieuIndex++];
+                this.imageCoordinates = this.currentLieu.localisation.coordinates;
+            }
+        },
+        updateDataDefault() {
+            const infosSeries = localStorage.getItem('infosSeries');
+            if (infosSeries) {
+                const parsedInfosSeries = JSON.parse(infosSeries);
+                this.zoom = parsedInfosSeries.defaultZoom;
+                this.center = [parsedInfosSeries.defaultLat, parsedInfosSeries.defaultLong];
+                this.minZoom = parsedInfosSeries.minZoom;
+                this.maxZoom = parsedInfosSeries.maxZoom;
+            } else {
+                console.error('Aucune donnée de série n\'a été trouvée dans le localStorage.');
+            }
+        },
     },
-    mounted() {
-        this.startTimer();
-        const savedRound = localStorage.getItem('currentRound');
-        const savedTotalScore = localStorage.getItem('totalScore');
-        const savedScore = localStorage.getItem('score');
-        if (savedRound) {
-            this.currentRound = Number(savedRound);
-        }
-        if (savedScore) {
-            this.score = Number(savedScore);
-        }
-        if (savedTotalScore) {
-            this.totalScore = Number(savedTotalScore);
-        }
-    }
+
+
 };
 </script>
 
 
+
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Lalezar&display=swap');
-  .lalezar-regular {
-      font-family: "Lalezar", system-ui;
-      font-weight: 400;
-  }
-  button {
-text-decoration: none;
+
+.lalezar-regular {
+    font-family: "Lalezar", system-ui;
+    font-weight: 400;
 }
+
+button {
+    text-decoration: none;
+}
+
 .greetings {
     position: relative;
 }
@@ -320,6 +368,7 @@ h2 {
 .custom-button:hover {
     background-color: #3fa670;
 }
+
 .modal {
     position: fixed;
     top: 0;
@@ -330,11 +379,12 @@ h2 {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 999; /* Assurez-vous que le popup apparaît au-dessus de tout le reste */
+    z-index: 999;
+    /* Assurez-vous que le popup apparaît au-dessus de tout le reste */
 }
 
 .modal-content {
-    background-color: #2B80B0 ;
+    background-color: #2B80B0;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
@@ -358,7 +408,8 @@ h2 {
 }
 
 .modal-content button.quitter {
-    background-color: #ff0000; /* Rouge */
+    background-color: #ff0000;
+    /* Rouge */
 }
 
 .modal-content button:hover {
@@ -366,6 +417,7 @@ h2 {
 }
 
 .modal-content button.quitter:hover {
-    background-color: #cc0000; /* Rouge foncé au survol */
+    background-color: #cc0000;
+    /* Rouge foncé au survol */
 }
 </style>
