@@ -20,10 +20,10 @@
         <div class="col-lg-12 bg-white text-dark">
           <h2 class="main-title text-center">Choix de la série</h2>
           <div class="mt-5 series-container row ">
-            <div v-for="serie in infosSeries" :key="serie.id"
+            <div v-for="serie in this.infosSeries" :key="serie.id"
                  class="series-card col-lg-3 mb-2 bg-custom text-white rounded">
               <h3>{{ serie.nom }}</h3>
-              <img src="@/assets/mapNancy.jpeg" alt="Image de la série" class="img-fluid">
+              <img :src="(`@/assets/${serie.nomImage}`)" alt="Image de la série" class="img-fluid">
               <p>{{ serie.description }}</p>
               <p>Meilleur score : {{ serie.bestScore || '--' }}</p>
               <button class="btn btn-success" @click="getLieux(serie.id)">Choisir cette série</button>
@@ -72,7 +72,7 @@ export default {
       this.loading = true;
       this.apiClient.get('http://docketu.iutnc.univ-lorraine.fr:50010/items/Serie')
           .then(response => {
-            this.infosSeries = response.data;
+            this.infosSeries = response.data.data;
           })
           .catch(error => {
             console.log(error)
@@ -91,27 +91,27 @@ export default {
     getLieux(id) {
       this.loading = true;
       this.apiClient
-          .get(`http://docketu.iutnc.univ-lorraine.fr:50010/items/Serie_Lieu?filter[Serie_id][_eq]=${id}`)
+          .get(`http://docketu.iutnc.univ-lorraine.fr:50010/items/Lieu_Serie?filter[Serie_id][_eq]=${id}`)
           .then(response => {
-            this.infosSeries_Lieux = response.data;
-            console.log(this.infosSeries_Lieux);
-          })
-          .catch(error => {
-            console.log(error)
-            this.errored = true
-            this.loading = false
-          })
-          .finally(() => this.loading = false);
-      const lieux = [];
-      for (let i = 0; i < this.infosSeries_Lieux.length; i++) {
-        lieux.push(this.infosSeries_Lieux[i].Lieu_id);
-      }
-      this.apiClient.get('http://docketu.iutnc.univ-lorraine.fr:50010/items/Lieu?filter[id][_in]=' + lieux.join(','))
-          .then(response => {
-            this.infosLieux = response.data;
-            const serieActuelle = this.infosSeries.find(serie => serie.id === id);
-            localStorage.setItem('infosSeries', JSON.stringify(serieActuelle));
-            localStorage.setItem('infosLieux', JSON.stringify(infosLieux));
+            this.infosSeries_Lieux = response.data.data;
+            const lieux = [];
+            for (let i = 0; i < this.infosSeries_Lieux.length; i++) {
+              lieux.push(this.infosSeries_Lieux[i].Lieu_id);
+            }
+            this.apiClient.get('http://docketu.iutnc.univ-lorraine.fr:50010/items/Lieu?filter[id][_in]=' + lieux.join(','))
+                .then(response => {
+                  this.infosLieux = response.data;
+                  const serieActuelle = this.infosSeries.find(serie => serie.id === id);
+                  localStorage.setItem('infosSeries', JSON.stringify(serieActuelle));
+                  localStorage.setItem('infosLieux', JSON.stringify(this.infosLieux));
+                  this.$router.push('/jeu');
+                })
+                .catch(error => {
+                  console.log(error)
+                  this.errored = true
+                  this.loading = false
+                })
+                .finally(() => this.loading = false);
           })
           .catch(error => {
             console.log(error)
