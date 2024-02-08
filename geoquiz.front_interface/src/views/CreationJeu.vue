@@ -4,15 +4,15 @@
       <h2 class="main-title text-center rounded">Choix de la difficulté : </h2>
       <div class="col-lg-12 ">
         <div class="d-flex justify-content-around mt-5 text-dark ">
-          <button class="btn text-white btn-no-hover" :class="{ 'bg-success': difficulty === 'easy' }"
-                  @click="setDifficulty('easy')">Facile
-          </button>
-          <button class="btn text-white btn-no-hover" :class="{ 'bg-warning': difficulty === 'normal' }"
-                  @click="setDifficulty('normal')">Normal
-          </button>
-          <button class="btn text-white btn-no-hover" :class="{ 'bg-danger': difficulty === 'hard' }"
-                  @click="setDifficulty('hard')">Difficile
-          </button>
+
+          <div v-for="difficulte in this.difficultes" :key="difficulte.difficulty_id">
+            <button
+                class="btn text-white btn-no-hover" :class="{ 'bg-success': difficulty === difficulte.level_name }"
+                @click="setDifficulty(difficulte.level_name)">
+              {{ difficulte.level_name }}
+            </button>
+          </div>
+
         </div>
       </div>
       <div class="bg-white rounded">
@@ -41,6 +41,7 @@
 //Récupération des informations des séries et des lieux pour préparer la partie
 //@author: Jules HOLDER
 import axios from 'axios';
+import gameService from '@/services/gameService';
 
 
 export default {
@@ -48,13 +49,14 @@ export default {
     return {
       loading: true,
       errored: false,
-      difficulty: 'easy',
+      difficulty: '',
       infosSeries: null,
       infosSeries_Lieux: null,
       infosLieux: null,
       apiClient: axios.create({
         withCredentials: false
-      })
+      }),
+      difficultes: null
     };
   },
   methods: {
@@ -119,10 +121,33 @@ export default {
             this.loading = false
           })
           .finally(() => this.loading = false);
+    },
+    /**
+     * Récupère les informations des difficultés de la série via l'API REST de la BD Directus
+     */
+    getDifficultes() {
+      this.loading = true;
+      //use gameService
+      gameService.getDifficulties()
+          .then(response => {
+            this.difficultes = response;
+          })
+          .catch(error => {
+            console.log(error)
+            this.errored = true
+            this.loading = false
+          })
+          .finally(() => this.loading = false);
     }
   },
   mounted() {
     this.getSeries();
+    this.getDifficultes();
+    //Rediriger vers connexion si non connecté (bearer token)
+    if (!localStorage.getItem('token')) {
+      this.$router.push('/login');
+    }
+
   }
 };
 </script>
