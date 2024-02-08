@@ -36,3 +36,6 @@
 [2024-02-08T14:50:22.683939+00:00] auth.WARNING: Invalid JWT: Invalid jwt token [] []
 [2024-02-08T16:13:29.506966+00:00] auth.WARNING: JWT expired: Expired jwt token [] []
 [2024-02-08T16:14:36.647640+00:00] auth.WARNING: JWT expired: Expired jwt token [] []
+[2024-02-08T19:16:40.616887+00:00] auth.WARNING: JWT expired: Expired jwt token [] []
+[2024-02-08T19:16:58.895391+00:00] auth.WARNING: JWT expired: Expired jwt token [] []
+[2024-02-08T19:17:19.816588+00:00] auth.WARNING: JWT expired: Expired jwt token [] []

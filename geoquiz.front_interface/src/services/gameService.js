@@ -33,7 +33,7 @@ export default {
                     'Authorization': 'Bearer ' + localStorage.getItem('token') || '',
                 }
             });
-            console.log('Games Data received');
+            console.log('Games Data received: ', response.data.games);
             return response.data.games;
 
         } catch (error) {
