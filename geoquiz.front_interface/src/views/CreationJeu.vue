@@ -4,15 +4,15 @@
       <h2 class="main-title text-center rounded">Choix de la difficulté : </h2>
       <div class="col-lg-12 ">
         <div class="d-flex justify-content-around mt-5 text-dark ">
-          <button class="btn text-white btn-no-hover" :class="{ 'bg-success': difficulty === 'easy' }"
-                  @click="setDifficulty('easy')">Facile
-          </button>
-          <button class="btn text-white btn-no-hover" :class="{ 'bg-warning': difficulty === 'normal' }"
-                  @click="setDifficulty('normal')">Normal
-          </button>
-          <button class="btn text-white btn-no-hover" :class="{ 'bg-danger': difficulty === 'hard' }"
-                  @click="setDifficulty('hard')">Difficile
-          </button>
+
+          <div v-for="difficulte in this.difficultes" :key="difficulte.difficulty_id">
+            <button
+                class="btn text-white btn-no-hover" :class="{ 'bg-success': difficulty === difficulte.level_name }"
+                @click="setDifficulty(difficulte.level_name)">
+              {{ difficulte.level_name }}
+            </button>
+          </div>
+
         </div>
       </div>
       <div class="bg-white rounded">
@@ -20,10 +20,10 @@
         <div class="col-lg-12 bg-white text-dark">
           <h2 class="main-title text-center">Choix de la série</h2>
           <div class="mt-5 series-container row ">
-            <div v-for="serie in infosSeries" :key="serie.id"
+            <div v-for="serie in this.infosSeries" :key="serie.id"
                  class="series-card col-lg-3 mb-2 bg-custom text-white rounded">
               <h3>{{ serie.nom }}</h3>
-              <img src="@/assets/mapNancy.jpeg" alt="Image de la série" class="img-fluid">
+              <img :src="(`@/assets/${serie.nomImage}`)" alt="Image de la série" class="img-fluid">
               <p>{{ serie.description }}</p>
               <p>Meilleur score : {{ serie.bestScore || '--' }}</p>
               <button class="btn btn-success" @click="getLieux(serie.id)">Choisir cette série</button>
@@ -41,6 +41,7 @@
 //Récupération des informations des séries et des lieux pour préparer la partie
 //@author: Jules HOLDER
 import axios from 'axios';
+import gameService from '@/services/gameService';
 
 
 export default {
@@ -48,13 +49,14 @@ export default {
     return {
       loading: true,
       errored: false,
-      difficulty: 'easy',
+      difficulty: '',
       infosSeries: null,
       infosSeries_Lieux: null,
       infosLieux: null,
       apiClient: axios.create({
         withCredentials: false
-      })
+      }),
+      difficultes: null
     };
   },
   methods: {
@@ -72,7 +74,7 @@ export default {
       this.loading = true;
       this.apiClient.get('http://docketu.iutnc.univ-lorraine.fr:50010/items/Serie')
           .then(response => {
-            this.infosSeries = response.data;
+            this.infosSeries = response.data.data;
           })
           .catch(error => {
             console.log(error)
@@ -91,10 +93,27 @@ export default {
     getLieux(id) {
       this.loading = true;
       this.apiClient
-          .get(`http://docketu.iutnc.univ-lorraine.fr:50010/items/Serie_Lieu?filter[Serie_id][_eq]=${id}`)
+          .get(`http://docketu.iutnc.univ-lorraine.fr:50010/items/Lieu_Serie?filter[Serie_id][_eq]=${id}`)
           .then(response => {
-            this.infosSeries_Lieux = response.data;
-            console.log(this.infosSeries_Lieux);
+            this.infosSeries_Lieux = response.data.data;
+            const lieux = [];
+            for (let i = 0; i < this.infosSeries_Lieux.length; i++) {
+              lieux.push(this.infosSeries_Lieux[i].Lieu_id);
+            }
+            this.apiClient.get('http://docketu.iutnc.univ-lorraine.fr:50010/items/Lieu?filter[id][_in]=' + lieux.join(','))
+                .then(response => {
+                  this.infosLieux = response.data;
+                  const serieActuelle = this.infosSeries.find(serie => serie.id === id);
+                  localStorage.setItem('infosSeries', JSON.stringify(serieActuelle));
+                  localStorage.setItem('infosLieux', JSON.stringify(this.infosLieux));
+                  this.$router.push('/jeu');
+                })
+                .catch(error => {
+                  console.log(error)
+                  this.errored = true
+                  this.loading = false
+                })
+                .finally(() => this.loading = false);
           })
           .catch(error => {
             console.log(error)
@@ -102,16 +121,16 @@ export default {
             this.loading = false
           })
           .finally(() => this.loading = false);
-      const lieux = [];
-      for (let i = 0; i < this.infosSeries_Lieux.length; i++) {
-        lieux.push(this.infosSeries_Lieux[i].Lieu_id);
-      }
-      this.apiClient.get('http://docketu.iutnc.univ-lorraine.fr:50010/items/Lieu?filter[id][_in]=' + lieux.join(','))
+    },
+    /**
+     * Récupère les informations des difficultés de la série via l'API REST de la BD Directus
+     */
+    getDifficultes() {
+      this.loading = true;
+      //use gameService
+      gameService.getDifficulties()
           .then(response => {
-            this.infosLieux = response.data;
-            const serieActuelle = this.infosSeries.find(serie => serie.id === id);
-            localStorage.setItem('infosSeries', JSON.stringify(serieActuelle));
-            localStorage.setItem('infosLieux', JSON.stringify(infosLieux));
+            this.difficultes = response;
           })
           .catch(error => {
             console.log(error)
@@ -123,6 +142,12 @@ export default {
   },
   mounted() {
     this.getSeries();
+    this.getDifficultes();
+    //Rediriger vers connexion si non connecté (bearer token)
+    if (!localStorage.getItem('token')) {
+      this.$router.push('/login');
+    }
+
   }
 };
 </script>
