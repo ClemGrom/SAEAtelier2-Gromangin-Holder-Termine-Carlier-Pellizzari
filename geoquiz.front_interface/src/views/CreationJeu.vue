@@ -143,6 +143,11 @@ export default {
   mounted() {
     this.getSeries();
     this.getDifficultes();
+    //Rediriger vers connexion si non connecté (bearer token)
+    if (!localStorage.getItem('token')) {
+      this.$router.push('/login');
+    }
+
   }
 };
 </script>

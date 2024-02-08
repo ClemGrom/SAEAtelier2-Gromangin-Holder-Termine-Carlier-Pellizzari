@@ -39,7 +39,7 @@
       <div class="section">
         <h3 class="section-title">Mes High-Scores par séries</h3>
         <div class="select-container">
-          <select class="custom-select user-score-select" v-model="selectedUserHighScore" @change="showUserHighScore">
+          <select class="custom-select user-score-select" v-model="selectedUserHighScore">
             <option disabled selected>Choisissez la série que vous voulez voir</option>
             <option v-for="userHighScore in userHighScores" :key="userHighScore.id">{{ userHighScore.seriesName }}</option>
           </select>
@@ -53,7 +53,7 @@
       <div class="section">
         <h3 class="section-title">High-Scores par séries (global)</h3>
         <div class="select-container">
-          <select class="custom-select global-score-select" v-model="selectedGlobalHighScore" @change="showGlobalHighScore">
+          <select class="custom-select global-score-select" v-model="selectedGlobalHighScore">
             <option disabled selected>Choisissez la série que vous voulez voir</option>
             <option v-for="globalHighScore in globalHighScores" :key="globalHighScore.id">{{ globalHighScore.seriesName }}</option>
           </select>
