@@ -32,11 +32,15 @@
   </script>
   
   <style scoped>
-    @import url('https://fonts.googleapis.com/css2?family=Lalezar&display=swap');
-    .lalezar-regular {
-        font-family: "Lalezar", system-ui;
-        font-weight: 400;
-    }
+   @import url('https://fonts.googleapis.com/css2?family=Lalezar&display=swap');
+  .lalezar-regular {
+      font-family: "Lalezar", system-ui;
+      font-weight: 400;
+  }
+  button {
+text-decoration: none;
+}
+
 
     #container {
         background-color: #2c3e50;
@@ -110,6 +114,7 @@
         justify-content: center;
         align-items: center;
         margin-right: 20px;
+        text-decoration: none;
     }
 
     .quit {
