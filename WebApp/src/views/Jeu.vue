@@ -1,5 +1,5 @@
 <template>
-    <div class="greetings">
+    <div class="greetings lalezar-regular">
         <img :src="`@/assets/${backgroundImage}`" alt="Image du Jeu" class="game-image" />
 
         <div class="logo">
@@ -40,6 +40,7 @@
 <script>
 import 'leaflet/dist/leaflet.css';
 import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet';
+import axios from 'axios';
 
 
 export default {
@@ -72,6 +73,20 @@ export default {
         };
     },
     methods: {
+
+        tempGetLieux() {
+            axios.get('http://localhost:3000/lieux')
+                .then((response) => {
+                    this.lieux = response.data;
+                    localStorage.setItem('infosLieux', JSON.stringify(this.lieux));
+                    this.currentLieu = this.lieux[0];
+                    this.updateImageCoordinates();
+                    this.updateBackgroundImage();
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        },
         startTimer() {
             if (!this.timerInterval) {
                 this.timerInterval = setInterval(() => {
@@ -203,9 +218,15 @@ export default {
 
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Lalezar&display=swap');
 .greetings {
     position: relative;
 }
+
+    .lalezar-regular {
+        font-family: "Lalezar", system-ui;
+        font-weight: 400;
+    }
 button {
   text-decoration: none;
 }
@@ -215,18 +236,22 @@ button {
     font-size: 2em;
     z-index: 1;
     color: white;
-    text-shadow: 2px 2px 4px rgba(92, 83, 214, 0.5);
     position: absolute;
     top: 0;
     left: 0;
     margin-left: 20px;
 }
 
+
+
 .logo img {
     width: 50px;
     height: 50px;
-    border-radius: 50%;
+    border-radius: 10px;
     padding-right: 10px;
+}
+.logo h1 {
+    text-shadow: 2px 2px 4px rgba(92, 83, 214, 0.5);
 }
 
 h2 {
@@ -319,6 +344,7 @@ h2 {
     font-weight: bold;
     color: white;
     background-color: #4AC78D;
+    width: 80%;
     padding: 12px 20px;
     border: none;
     border-radius: 8px;
@@ -346,7 +372,7 @@ h2 {
     justify-content: center;
     align-items: center;
     z-index: 999;
-    /* Assurez-vous que le popup apparaît au-dessus de tout le reste */
+  
 }
 
 .modal-content {
