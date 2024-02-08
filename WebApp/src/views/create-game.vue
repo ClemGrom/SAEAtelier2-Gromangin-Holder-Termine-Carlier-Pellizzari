@@ -17,12 +17,12 @@
                 <div class="col-lg-12 bg-white text-dark">
                     <h2 class="main-title text-center">Choix de la série</h2>
                     <div class="mt-5 series-container row ">
-                        <div v-for="series in seriesOptions" :key="series.value"
+                        <div v-for="series in infosSeries" :key="series.id"
                             class="series-card col-lg-3 mb-2 bg-custom text-white rounded">
-                            <h3>{{ series.text }}</h3>
-                            <p>{{ series.description }}</p>
-                            <p>Meilleur score : {{ series.bestScore }}</p>
-                            <button class="btn btn-success" @click="setSeries(series.value)">Choisir cette série</button>
+                            <h3>{{ series.Titre }}</h3>
+                            <p>{{ series.Description }}</p>
+                            <p>Meilleur score : {{ series.bestScore || '--' }}</p>
+                            <button class="btn btn-success" @click="setSeries(series.id)">Choisir cette série</button>
                         </div>
                     </div>
                 </div>
@@ -32,18 +32,18 @@
 </template>
   
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
+            loading: true,
+            errored: false,
             difficulty: 'easy',
             series: '',
-            seriesOptions: [
-                { value: 'series1', text: 'Série 1', description: 'Description de la série 1', bestScore: 100 },
-                { value: 'series2', text: 'Série 2', description: 'Description de la série 2', bestScore: 200 },
-                { value: 'series3', text: 'Série 3', description: 'Description de la série 3', bestScore: 300 },
-                { value: 'series4', text: 'Série 4', description: 'Description de la série 4', bestScore: 400 },
-                { value: 'series5', text: 'Série 5', description: 'Description de la série 5', bestScore: 500 }
-            ],
+            infosSeries: null,
+            infosSeries_Lieux: null,
+            infosLieux: null,
         };
     },
     methods: {
@@ -56,7 +56,38 @@ export default {
         createGame() {
             // Implémentez la logique de création de la partie ici
         },
+        getSeries() {
+            this.loading = true;
+            axios.
+                get('http://docketu.iutnc.univ-lorraine.fr:50010/items/Serie')
+                .then(response => {
+                    this.infosSeries = response.data;
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.errored = true
+                    this.loading = false
+                })
+                .finally(() => this.loading = false)
+        },
+        getLieux(id) {
+            this.loading = true;
+            axios.
+                get('http://docketu.iutnc.univ-lorraine.fr:50010/items/Lieu?Serie=' + id)
+                .then(response => {
+                    this.infosLieux = response.data;
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.errored = true
+                    this.loading = false
+                })
+                .finally(() => this.loading = false)
+        }
     },
+    created() {
+        this.getSeries();
+    }
 };
 </script>
   
