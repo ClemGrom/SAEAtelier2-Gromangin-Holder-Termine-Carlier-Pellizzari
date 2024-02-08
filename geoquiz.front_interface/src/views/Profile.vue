@@ -10,13 +10,18 @@
       <div class="section">
         <h3 class="section-title">Historique de mes parties effectuées</h3>
         <div class="select-container">
-          <select class="custom-select game-select" v-model="selectedGame" @change="showGameDetails">
+          <select class="custom-select game-select" v-model="selectedGame">
             <option disabled selected>Sélectionnez votre partie jouée pour voir sa chronologie</option>
-            <option v-for="game in gamesHistory" :key="game.id">{{ game.name }}</option>
+            <option v-for="game in gamesHistory" :key="game.id" :value="game.id">
+              {{ game.startTime }} - {{ game.score }} points
+            </option>
           </select>
           <div class="select-icon"><i class="fas fa-gamepad"></i></div>
         </div>
         <div class="game-details" v-if="selectedGame">
+          <p><span class="detail-label">Statut :</span> {{ selectedGameStatus }}</p>
+          <p><span class="detail-label">Score :</span> {{ selectedGameScore }} points</p>
+          <p><span class="detail-label">Difficulté :</span> {{ selectedGameDifficulty }}</p>
           <p><span class="detail-label">Débuté le :</span> {{ selectedGameStartTime }}</p>
           <p><span class="detail-label">Terminé le :</span> {{ selectedGameEndTime }}</p>
         </div>
@@ -25,7 +30,7 @@
       <div class="section">
         <h3 class="section-title">Vos scores par parties effectuées</h3>
         <div class="select-container">
-          <select class="custom-select score-select" v-model="selectedScore" @change="showGameScore">
+          <select class="custom-select score-select" v-model="selectedScore">
             <option disabled selected>Sélectionnez une partie effectuée pour revoir votre score</option>
             <option v-for="score in scores" :key="score.id">{{ score.name }}</option>
           </select>
@@ -68,15 +73,12 @@
 </template>
 
 <script>
+import gameService from "@/services/gameService.js";
+
 export default {
   data() {
     return {
-      gamesHistory: [
-        { id: 4, name: 'Partie 4', startTime: '2024-02-04 09:45:00', endTime: '2024-02-04 11:00:00' },
-        { id: 3, name: 'Partie 3', startTime: '2024-02-03 10:30:00', endTime: '2024-02-03 11:15:00' },
-        { id: 2, name: 'Partie 2', startTime: '2024-02-02 15:00:00', endTime: '2024-02-02 16:45:00' },
-        { id: 1, name: 'Partie 1', startTime: '2024-02-01 13:00:00', endTime: '2024-02-01 14:30:00' },
-      ],
+      gamesHistory: [],
       scores: [
         { id: 4, name: 'Partie 4', value: 90 },
         { id: 3, name: 'Partie 3', value: 130 },
@@ -105,13 +107,26 @@ export default {
   },
   computed: {
     selectedGameStartTime() {
-      const game = this.gamesHistory.find(game => game.name === this.selectedGame);
+      const game = this.gamesHistory.find(game => game.id === this.selectedGame);
       return game ? game.startTime : '';
     },
     selectedGameEndTime() {
-      const game = this.gamesHistory.find(game => game.name === this.selectedGame);
+      const game = this.gamesHistory.find(game => game.id === this.selectedGame);
       return game ? game.endTime : '';
     },
+    selectedGameDifficulty() {
+      const game = this.gamesHistory.find(game => game.id === this.selectedGame);
+      return game ? game.difficulty : '';
+    },
+    selectedGameStatus() {
+      const game = this.gamesHistory.find(game => game.id === this.selectedGame);
+      return game ? game.status : '';
+    },
+    selectedGameScore() {
+      const game = this.gamesHistory.find(game => game.id === this.selectedGame);
+      return game ? game.score : '';
+    },
+
     selectedScoreValue() {
       const score = this.scores.find(score => score.name === this.selectedScore);
       return score ? score.value : '';
@@ -126,24 +141,26 @@ export default {
     }
   },
   methods: {
-    showGameDetails() {
-      const selectedGame = this.gamesHistory.find(game => game.name === this.selectedGame);
-      if (selectedGame) {
-        alert(`${selectedGame.name}\nDate de début : ${selectedGame.startTime}\nDate de fin : ${selectedGame.endTime}`);
-      }
-    },
-    showGameScore() {
-      const selectedScore = this.scores.find(score => score.name === this.selectedScore);
-      if (selectedScore) {
-        alert(`${selectedScore.name}\nVotre score est de ${selectedScore.value} points`);
-      }
-    },
-    showUserHighScore() {
-      alert(`${this.selectedUserHighScore}\nVotre score le plus haut est de ${this.selectedUserHighScorePoints} points, bravo !`);
-    },
-    showGlobalHighScore() {
-      alert(`${this.selectedGlobalHighScore}\nLe record à battre est de ${this.selectedGlobalHighScorePoints} points, à vous de jouer !`);
+    gamesHistoryComputed() {
+      return gameService.getGamesFromUser().then(response => {
+        response = response.map(
+            game => ({
+              id: game.game_id,
+              difficulty: game.difficulty.level_name,
+              status: game.status,
+              score: game.score,
+              startTime: game.created_at,
+              endTime: game.finished_at,
+            })
+        )
+        console.log("mapped games: ", response);
+        this.gamesHistory = response;
+        return response;
+      })
     }
+  },
+  mounted() {
+    this.gamesHistoryComputed();
   }
 };
 </script>

@@ -25,49 +25,21 @@ export default {
         }
     },
 
-    async createGame(gameData) {
+    async getGamesFromUser() {
         try {
-            const response = await apiClient.post('/games', gameData);
-            return response.data;
-        } catch (error) {
-            throw new Error('Erreur lors de la création du jeu');
-        }
-    },
+            console.log('Getting games from user');
+            const response = await apiClient.get('/users/games', {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token') || '',
+                }
+            });
+            console.log('Games Data received');
+            return response.data.games;
 
-    async getGameDetails(gameId) {
-        try {
-            const response = await apiClient.get(`/games/${gameId}`);
-            return response.data;
         } catch (error) {
-            throw new Error('Erreur lors de la récupération des détails du jeu');
+            throw new Error('Erreur lors de la récupération des parties');
         }
-    },
 
-    async submitGameResults(gameId, resultsData) {
-        try {
-            const response = await apiClient.post(`/games/${gameId}/submit`, resultsData);
-            return response.data;
-        } catch (error) {
-            throw new Error('Erreur lors de la soumission des résultats du jeu');
-        }
-    },
-
-    async getUserGames(userId) {
-        try {
-            const response = await apiClient.get(`/users/${userId}/games`);
-            return response.data;
-        } catch (error) {
-            throw new Error('Erreur lors de la récupération des jeux de l\'utilisateur');
-        }
-    },
-
-    async updateUserProfile(profileData) {
-        try {
-            const response = await apiClient.post('/users/profile', profileData);
-            return response.data;
-        } catch (error) {
-            throw new Error('Erreur lors de la mise à jour du profil de l\'utilisateur');
-        }
     },
 
     async checkAndRefreshToken() {
