@@ -25,7 +25,7 @@
     </div>
     <div class="illustration-section">
       <img src="@/assets/mapNancy.jpeg" alt="Illustration du jeu" class="illustration-image" />
-      <router-link to="/jeu" class="cta-button bigger-button">Crées une partie !</router-link>
+      <router-link to="/creation-jeu" class="cta-button bigger-button">Créer une partie !</router-link>
     </div>
   </div>
   </body>
@@ -150,4 +150,5 @@ nav {
 .bigger-button {
   font-size: 24px;
 }
+
 </style>

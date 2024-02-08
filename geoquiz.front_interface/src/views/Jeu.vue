@@ -1,5 +1,5 @@
 <template>
-    <div class="greetings">
+    <div class="greetings lalezar-regular">
         <img src="@/assets/placestan.jpg" alt="Place Stanislas" class="game-image" />
 
         <div class="logo">
@@ -40,7 +40,7 @@
 <script>
 import 'leaflet/dist/leaflet.css';
 import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet';
-import Acceuil from './Acceuil.vue';
+import Acceuil from './Accueil.vue';
 
 export default {
     name: 'jeu',
@@ -183,6 +183,14 @@ export default {
 
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Lalezar&display=swap');
+  .lalezar-regular {
+      font-family: "Lalezar", system-ui;
+      font-weight: 400;
+  }
+  button {
+text-decoration: none;
+}
 .greetings {
     position: relative;
 }

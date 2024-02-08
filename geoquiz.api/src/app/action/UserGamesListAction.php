@@ -19,11 +19,7 @@ class UserGamesListAction extends Action
 
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        if ($request->getAttribute('uuid') !== $args['userId']) {
-            throw new HttpForbiddenException($request, 'You are not allowed to access this game list');
-        }
-
-        $userId = $args['userId'];
+        $userId = $request->getAttribute('uuid');
         $games = $this->gameService->getUserGames($userId);
 
         $responseJson = [
