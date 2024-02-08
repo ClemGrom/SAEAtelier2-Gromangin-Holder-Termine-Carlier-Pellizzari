@@ -8,7 +8,6 @@ SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users`
 (
-    `email`                              varchar(64)  NOT NULL,
     `uuid`                               varchar(64)  NOT NULL,
     `password`                           varchar(256) NOT NULL,
     `active`                             tinyint(4)   NOT NULL DEFAULT 0,
@@ -18,7 +17,7 @@ CREATE TABLE `users`
     `refresh_token_expiration_date`      timestamp    NULL     DEFAULT NULL,
     `reset_passwd_token`                 varchar(64)           DEFAULT NULL,
     `reset_passwd_token_expiration_date` timestamp    NULL     DEFAULT NULL,
-    PRIMARY KEY (`email`)
+    PRIMARY KEY (`uuid`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
