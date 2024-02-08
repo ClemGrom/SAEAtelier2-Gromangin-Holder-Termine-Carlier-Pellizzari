@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="text-container">
-        <div v-show="showPrinciples" class="text-content">
+        <div v-if="showPrinciples" class="text-content">
           <ul class="game-rules">
             <li>Une partie consiste en une séquence de 10 photos aléatoires d'une même série, à placer sur la carte de la ville.</li>
             <li>Chaque série regroupe des photos de la même ville et de la même carte.</li>
@@ -21,7 +21,7 @@
             <li>La partie se termine une fois que toutes les 10 photos ont été positionnées.</li>
           </ul>
         </div>
-        <div v-show="showPoints" class="text-content">
+        <div v-if="showPoints" class="text-content">
           <ul class="game-rules">
             <p>Placement des réponses</p>
             <li>pour 1 réponse placée à une distance &lt; D : <span class="point-value">5pts</span></li>
@@ -78,13 +78,6 @@ export default {
  }
 };
 </script>
-
-hoverEffect(event) {
-event.target.style.cursor = 'pointer';
-},
-leaveEffect(event) {
-event.target.style.cursor = 'default';
-}
 
 <style scoped>
 body {

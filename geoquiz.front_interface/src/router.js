@@ -8,6 +8,7 @@ import jeu from "./views/jeu.vue";
 import FinRound from "./views/FinRound.vue";
 import FinJeu from "./views/FinJeu.vue";
 import Profile from "@/views/Profile.vue";
+import createGame from './views/create-game.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,7 +31,7 @@ const router = createRouter({
     {
       path: "/jeu",
       name: "Jeu",
-      component: jeu,
+      component: createGame,
     },
     { path: "/FinRound", 
     name: "FinRound",
