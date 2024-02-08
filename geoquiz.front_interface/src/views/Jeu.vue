@@ -40,7 +40,7 @@
 <script>
 import 'leaflet/dist/leaflet.css';
 import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet';
-import Acceuil from './Acceuil.vue';
+import Acceuil from './Accueil.vue';
 
 export default {
     name: 'jeu',
