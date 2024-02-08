@@ -3,11 +3,11 @@
     <div class="gray-container">
       <div class="content-container">
         <div class="content-section" :class="{ 'active': showPrinciples }" @click="togglePrinciplesDisplay">
-          <h2 class="section-title">Principe et règles du jeu</h2>
+          <h2 class="section-title" @mouseover="hoverEffect" @mouseleave="leaveEffect">Principe et règles du jeu</h2>
           <div class="divider"></div>
         </div>
         <div class="content-section" :class="{ 'active': showPoints }" @click="togglePointsDisplay">
-          <h2 class="section-title">Calculer ses points </h2>
+          <h2 class="section-title" @mouseover="hoverEffect" @mouseleave="leaveEffect">Calculer ses points </h2>
           <div class="divider"></div>
         </div>
       </div>
@@ -50,14 +50,32 @@ export default {
   },
   methods: {
     togglePrinciplesDisplay() {
-      this.showPrinciples = !this.showPrinciples;
-      this.showPoints = false;
+      if (!this.showPoints) {
+        this.showPrinciples = true;
+      } else {
+        this.showPrinciples = !this.showPrinciples;
+      }
+      if (this.showPrinciples) {
+        this.showPoints = false;
+      }
     },
     togglePointsDisplay() {
-      this.showPoints = !this.showPoints;
-      this.showPrinciples = false;
+      if (!this.showPrinciples) {
+        this.showPoints = true;
+      } else {
+        this.showPoints = !this.showPoints;
+      }
+      if (this.showPoints) {
+        this.showPrinciples = false;
+      }
+    },
+    hoverEffect(event) {
+      event.target.style.cursor = 'pointer';
+    },
+    leaveEffect(event) {
+      event.target.style.cursor = 'default';
     }
-  }
+ }
 };
 </script>
 
