@@ -1,6 +1,6 @@
 <template>
     <div class="greetings lalezar-regular">
-        <img src="@/assets/placestan.jpg" alt="Place Stanislas" class="game-image" />
+        <img :src="'http://docketu.iutnc.univ-lorraine.fr:50010/assets/' + fondImage" alt="Place Stanislas" class="game-image" />
 
         <div class="logo">
             <img src="@/assets/game_logo.jpg" alt="Game Logo" class="game-logo" />
@@ -68,7 +68,7 @@ export default {
             currentLieuIndex: 0, // Index du lieu actuel
             infosSeries: null,
             currentSerie: null,
-
+            fondImage: null,
         };
     },
     mounted() {
@@ -153,8 +153,12 @@ export default {
         redirectToFinRound() {
             if (this.currentRound >= 6) {
                 this.$router.push('/FinJeu');
+                this.pauseTimer();
+                this.timeRemaining = 30;
             } else {
                 this.$router.push('/FinRound');
+                this.pauseTimer();
+                this.timeRemaining = 30;
             }
         },
         checkDistance() {
@@ -205,26 +209,12 @@ export default {
             if (this.currentLieuIndex < this.lieux.length) {
                 this.currentLieu = this.lieux[this.currentLieuIndex++];
                 this.imageCoordinates = this.currentLieu.localisation.coordinates;
-            }
-        },
-        updateDataDefault() {
-            const infosSeries = localStorage.getItem('infosSeries');
-            if (infosSeries) {
-                const parsedInfosSeries = JSON.parse(infosSeries);
-                this.zoom = parsedInfosSeries.defaultZoom;
-                this.center = [parsedInfosSeries.defaultLat, parsedInfosSeries.defaultLong];
-                this.minZoom = parsedInfosSeries.minZoom;
-                this.maxZoom = parsedInfosSeries.maxZoom;
-            } else {
-                console.error('Aucune donnée de série n\'a été trouvée dans le localStorage.');
+                this.fondImage = this.currentLieu.image;
             }
         },
     },
-
-
 };
 </script>
-
 
 
 <style scoped>
