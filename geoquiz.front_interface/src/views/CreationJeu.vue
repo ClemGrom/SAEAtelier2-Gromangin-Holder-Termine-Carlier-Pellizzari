@@ -5,22 +5,22 @@
       <div class="col-lg-12 d-flex flex-column justify-content-center">
         <div class="text-center mb-3">Choix de la difficulté</div>
         <div class="d-flex justify-content-around mt-5 text-dark">
-            <div v-for="difficulte in this.difficultes" :key="difficulte.difficulty_id">
-                <button
-                    class="btn text-white btn-no-hover" 
-                    :class="{
+          <div v-for="difficulte in this.difficultes" :key="difficulte.difficulty_id">
+            <button
+                class="btn text-white btn-no-hover"
+                :class="{
                         'btn-success': difficulte.level_name === 'easy', 
                         'btn-warning': difficulte.level_name === 'normal', 
                         'btn-danger': difficulte.level_name === 'hard' 
                     }"
-                    @click="setDifficulty(difficulte.level_name)">
-                    {{ difficulte.level_name }}
-                </button>
-            </div>
+                @click="setDifficulty(difficulte.level_name)">
+              {{ difficulte.level_name }}
+            </button>
+          </div>
         </div>
         <div class="text-center mt-3">Choix de la série</div>
       </div>
-      
+
       <div class="bg-white rounded">
 
         <div class="col-lg-12 bg-white text-dark">
@@ -29,7 +29,8 @@
             <div v-for="serie in this.infosSeries" :key="serie.id"
                  class="series-card col-lg-3 mb-2 bg-custom text-white rounded">
               <h3>{{ serie.nom }}</h3>
-              <img :src="'http://docketu.iutnc.univ-lorraine.fr:50010/assets/' + serie.image+'/'+serie.nomImage" alt="Image de la série" class="img-fluid">
+              <img :src="'http://docketu.iutnc.univ-lorraine.fr:50010/assets/' + serie.image+'/'+serie.nomImage"
+                   alt="Image de la série" class="img-fluid">
               <p>{{ serie.description }}</p>
               <p>Meilleur score : {{ serie.bestScore || '--' }}</p>
               <button class="btn btn-success" @click="getLieux(serie.id)">Choisir cette série</button>
@@ -62,7 +63,8 @@ export default {
       apiClient: axios.create({
         withCredentials: false
       }),
-      difficultes: null
+      difficultes: null,
+      token: localStorage.getItem('token'),
     };
   },
   methods: {
@@ -108,15 +110,28 @@ export default {
             }
             this.apiClient.get('http://docketu.iutnc.univ-lorraine.fr:50010/items/Lieu?filter[id][_in]=' + lieux.join(','))
                 .then(response => {
-                  this.infosLieux = response.data;
-                  const serieActuelle = this.infosSeries.find(serie => serie.id === id);
-                  localStorage.setItem('infosSeries', JSON.stringify(serieActuelle));
-                  localStorage.setItem('infosLieux', JSON.stringify(this.infosLieux));
-                  localStorage.setItem('index', 0);
-                  localStorage.setItem('score', 0);
-                  localStorage.setItem('currentRound', 1);
-                  this.$router.push('/jeu');
-                })
+                      this.infosLieux = response.data;
+                      const serieActuelle = this.infosSeries.find(serie => serie.id === id);
+                      localStorage.setItem('infosSeries', JSON.stringify(serieActuelle));
+                      localStorage.setItem('infosLieux', JSON.stringify(this.infosLieux));
+                      localStorage.setItem('index', 0);
+                      localStorage.setItem('score', 0);
+                      localStorage.setItem('currentRound', 1);
+                      this.apiClient.post('http://docketu.iutnc.univ-lorraine.fr:50015/api/games', {
+                            "difficulty_id": this.difficulty,
+                            "serie_id": id,
+                          }, {
+                            headers: {
+                              'Authorization': `Bearer ${this.token}`,
+                            },
+                          }
+                      ).then(response => {
+                            localStorage.setItem('game_id', response.data.game.game_id);
+                            this.$router.push('/jeu');
+                          }
+                      )
+                    }
+                )
                 .catch(error => {
                   console.log(error)
                   this.errored = true
@@ -187,6 +202,7 @@ export default {
   cursor: pointer;
   background-color: #22364B;
 }
+
 .btn-no-hover:hover {
   background-color: inherit !important;
 }
