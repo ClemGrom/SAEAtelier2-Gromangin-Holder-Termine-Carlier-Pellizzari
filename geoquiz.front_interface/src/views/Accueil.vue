@@ -3,28 +3,30 @@
   <div class="home-container">
     <nav>
       <div class="header">
-        <img src="@/assets/game_logo.jpg" alt="Game Logo" class="game-logo" />
+        <img src="@/assets/game_logo.jpg" alt="Game Logo" class="game-logo"/>
         <h1 class="main-title">GeoQuizz</h1>
       </div>
       <div class="user-actions">
         <router-link to="/register" class="cta-button">Inscris-toi ici !</router-link>
-        <router-link to="/login" class="cta-button">Se connecter</router-link>
-        <router-link to="/profile" class="profile-link"><img src="@/assets/utilisateur.png" alt="logo utilisateur" class="logo-utilisateur"></router-link>
+        <router-link to="/login" class="cta-button">Connecte-toi ici!</router-link>
+        <router-link to="/profile" class="profile-link"><img src="@/assets/utilisateur.png" alt="logo utilisateur"
+                                                             class="logo-utilisateur"></router-link>
       </div>
     </nav>
     <div class="game-intro">
       <p>
-        Bienvenue sur GeoQuizz ! le jeu captivant où vous devez placer avec précision des photos sur la carte de votre ville plus rapidement que les autres joueurs.
+        Bienvenue sur GeoQuizz ! Le jeu captivant où vous devez localiser avec précision des photos sur la carte le plus
+        rapidement que les autres joueurs.
       </p>
-      <p1>
+      <p>
         Vous êtes prêt à relever le défi ?
-      </p1>
+      </p>
     </div>
     <div class="game-principles">
-      <GamePrinciples />
+      <GamePrinciples/>
     </div>
     <div class="illustration-section">
-      <img src="@/assets/mapNancy.jpeg" alt="Illustration du jeu" class="illustration-image" />
+      <img src="@/assets/mapNancy.jpeg" alt="Illustration du jeu" class="illustration-image"/>
       <router-link to="/creation-jeu" class="cta-button bigger-button">Créer une partie !</router-link>
     </div>
   </div>
@@ -34,6 +36,10 @@
 <script>
 import GamePrinciples from '@/components/GamePrinciples.vue';
 
+/**
+ * Import du component de GamePrinciples
+ * afin d'afficher les règles du jeu
+ */
 export default {
   components: {
     GamePrinciples,

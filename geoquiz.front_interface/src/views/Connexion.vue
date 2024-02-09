@@ -19,7 +19,9 @@
         </div>
         <button type="submit">Se Connecter</button>
       </form>
-      <p class="register-link">Pas encore de compte? <router-link to="/register">Inscrivez-vous ici</router-link></p>
+      <p class="register-link">Pas encore de compte?
+        <router-link to="/register">Inscrivez-vous ici</router-link>
+      </p>
     </div>
     <div class="back-link">
       <router-link to="/">Retourner à l'accueil</router-link>
@@ -39,6 +41,10 @@ export default {
     };
   },
   methods: {
+    /**
+     * Connexion d'un utilisateur via le service d'authentification
+     * @returns {Promise<void>}
+     */
     async loginUser() {
       try {
         const credentials = {
