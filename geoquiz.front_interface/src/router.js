@@ -4,7 +4,6 @@ import Acceuil from "./views/Accueil.vue";
 import Inscription from "./views/Inscription.vue";
 import Connexion from "./views/Connexion.vue";
 import page404 from "./views/page404.vue";
-import jeu from "./views/jeu.vue";
 import FinRound from "./views/FinRound.vue";
 import FinJeu from "./views/FinJeu.vue";
 import Profile from "@/views/Profile.vue";
@@ -43,11 +42,6 @@ const router = createRouter({
             path: "/FinJeu",
             name: "FinJeu",
             component: FinJeu,
-        },
-        {
-            path: "/jeu/:id",
-            name: "jeu",
-            component: jeu,
         },
         {
             path: "/creation-jeu",
