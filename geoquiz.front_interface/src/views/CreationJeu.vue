@@ -2,19 +2,25 @@
   <div class="d-flex justify-content-center align-items-center vh-100 bg-custom">
     <div class="row w-100 text-white">
       <h2 class="main-title text-center rounded">Choix de la difficulté : </h2>
-      <div class="col-lg-12 ">
-        <div class="d-flex justify-content-around mt-5 text-dark ">
-
-          <div v-for="difficulte in this.difficultes" :key="difficulte.difficulty_id">
-            <button
-                class="btn text-white btn-no-hover" :class="{ 'bg-success': difficulty === difficulte.level_name }"
-                @click="setDifficulty(difficulte.level_name)">
-              {{ difficulte.level_name }}
-            </button>
-          </div>
-
+      <div class="col-lg-12 d-flex flex-column justify-content-center">
+        <div class="text-center mb-3">Choix de la difficulté</div>
+        <div class="d-flex justify-content-around mt-5 text-dark">
+            <div v-for="difficulte in this.difficultes" :key="difficulte.difficulty_id">
+                <button
+                    class="btn text-white btn-no-hover" 
+                    :class="{
+                        'btn-success': difficulte.level_name === 'easy', 
+                        'btn-warning': difficulte.level_name === 'normal', 
+                        'btn-danger': difficulte.level_name === 'hard' 
+                    }"
+                    @click="setDifficulty(difficulte.level_name)">
+                    {{ difficulte.level_name }}
+                </button>
+            </div>
         </div>
+        <div class="text-center mt-3">Choix de la série</div>
       </div>
+      
       <div class="bg-white rounded">
 
         <div class="col-lg-12 bg-white text-dark">
@@ -181,16 +187,6 @@ export default {
   cursor: pointer;
   background-color: #22364B;
 }
-
-.btn-success {
-  color: #ecf0f1;
-  background-color: #4AC78D;
-}
-
-.btn-success:hover {
-  background-color: #2980b9;
-}
-
 .btn-no-hover:hover {
   background-color: inherit !important;
 }
@@ -208,5 +204,7 @@ export default {
   padding: 20px;
   margin: 20px;
   margin-left: 70px;
-}</style>
+}
+
+</style>
   
