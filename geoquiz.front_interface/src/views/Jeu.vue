@@ -224,11 +224,11 @@ export default {
     let baseScore = 0;
     const D = 25;
 
-    if (distance < D) {
+    if (distance > D) {
       baseScore = 5;
-    } else if (distance < 2 * D) {
+    } else if (distance > 2 * D) {
       baseScore = 3;
-    } else if (distance < 3 * D) {
+    } else if (distance > 3 * D) {
       baseScore = 1;
     }
 
