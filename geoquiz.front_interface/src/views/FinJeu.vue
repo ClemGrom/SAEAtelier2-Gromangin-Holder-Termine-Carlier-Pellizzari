@@ -50,7 +50,15 @@ export default {
     // Réinitialisation du score et du numéro du tour
     resetScoreAndRound() {
       // Effacement de toutes les données stockées localement
+      // Stoquer les tokens
+      const token = localStorage.getItem('token');
+      const refreshToken = localStorage.getItem('refreshToken');
       localStorage.clear();
+
+      // Restaurer les tokens
+      localStorage.setItem('token', token);
+      localStorage.setItem('refreshToken', refreshToken);
+
       // Réinitialisation des données du composant
       this.score = 0;
       this.round = 1;
