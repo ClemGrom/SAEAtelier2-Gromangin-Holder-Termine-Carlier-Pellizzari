@@ -83,7 +83,7 @@ export default {
   mounted() {
     const serie = JSON.parse(localStorage.getItem('infosSeries'));
     try {
-      this.center = [serie.defaultLong, this.serie.defaultLat]
+      this.center = [serie.defaultLong, serie.defaultLat]
       this.defaultZoom = serie.defaultZoom;
       this.maxZoom = serie.maxZoom;
       this.minZoom = serie.minZoom;
@@ -272,7 +272,6 @@ h2 {
   color: white;
   position: absolute;
   bottom: 0;
-  left: 0;
   margin-left: 20px;
   padding: 10px;
   border-radius: 10px;
