@@ -35,7 +35,7 @@ return function(App $app) {
 
         $app->group('/users', function ($app) {
             // Route pour lister les parties d'un utilisateur
-            $app->get('/{userId}/games[/]', MainAction::class)->setName('user_games_list');
+            $app->get('/games[/]', MainAction::class)->setName('user_games_list');
 
             //create user profile route without checkjwt check
             $app->post('/profile[/]', MainAction::class)->setName('user_profile');

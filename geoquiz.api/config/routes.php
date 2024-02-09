@@ -47,7 +47,7 @@ return function( App $app):void {
 
         $app->group('/users', function ($app) {
             // Route pour lister les parties d'un utilisateur
-            $app->get('/{userId}/games[/]', UserGamesListAction::class)->add(
+            $app->get('/games[/]', UserGamesListAction::class)->add(
                 $app->getContainer()->get('checkJwt')
             )->setName('user_games_list');
 
