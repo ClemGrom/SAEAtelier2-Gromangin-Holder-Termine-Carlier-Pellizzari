@@ -1,6 +1,7 @@
 <template>
     <div class="greetings lalezar-regular">
-        <img :src="'http://docketu.iutnc.univ-lorraine.fr:50010/assets/' + fondImage" alt="Place Stanislas" class="game-image" />
+        <img :src="'http://docketu.iutnc.univ-lorraine.fr:50010/assets/' + fondImage" alt="Place Stanislas"
+            class="game-image" />
 
         <div class="logo">
             <img src="@/assets/game_logo.jpg" alt="Game Logo" class="game-logo" />
@@ -8,7 +9,7 @@
         </div>
 
         <div class="score">
-            <h2>Score : {{ score }} Round : {{ currentRound }}/5</h2>
+            <h2>Score : {{ totalScore }} Round : {{ currentRound }}/5</h2>
         </div>
 
         <div class="map-container" @mouseover="expandMap" @mouseleave="shrinkMap">
@@ -56,7 +57,7 @@ export default {
             maxZoom: 18,
             minZoom: 1,
             marker: null,
-            timeRemaining: 30,
+            timeRemaining: 60,
             timerInterval: null,
             score: 0,
             isPaused: false,
@@ -64,131 +65,124 @@ export default {
             isMapExpanded: false,
             imageCoordinates: [48.6936219, 6.1806664],
             currentRound: 1,
-            lieux: [], // Variable pour stocker les données des lieux
-            currentLieuIndex: 0, // Index du lieu actuel
-            infosSeries: null,
-            currentSerie: null,
+            lieux: [],
             fondImage: null,
+            index: 0,
+            serie: null,
+            stopTimer: false,
         };
     },
     mounted() {
-        this.startTimer();
-
-        try {
-            const infosSeries = localStorage.getItem('infosSeries');
-            if (infosSeries) {
-                const parsedInfosSeries = JSON.parse(infosSeries);
-                this.zoom = parsedInfosSeries.defaultZoom;
-                this.center = [parsedInfosSeries.defaultLat, parsedInfosSeries.defaultLong];
-                this.minZoom = parsedInfosSeries.minZoom;
-                this.maxZoom = parsedInfosSeries.maxZoom;
-            } else {
-                console.error('Aucune donnée de série n\'a été trouvée dans le localStorage.');
+        this.serie = JSON.parse(localStorage.getItem('infosSeries'));
+            try {
+                this.center = [this.serie.defaultLong, this.serie.defaultLat]
+                this.zoom = this.serie.zoom;
+                this.maxZoom = this.serie.maxZoom;
+                this.minZoom = this.serie.minZoom;
+            } catch (error) {
+                console.error('Les données des séries ne sont pas au format attendu.');
             }
-        } catch (error) {
-            console.error('Erreur lors de la récupération des données par défaut :', error);
-        }
-
-        const savedRound = localStorage.getItem('currentRound');
-        const savedTotalScore = localStorage.getItem('totalScore');
-        const savedScore = localStorage.getItem('score');
-        if (savedRound) {
-            this.currentRound = Number(savedRound);
-        }
-        if (savedScore) {
-            this.score = Number(savedScore);
-        }
-        if (savedTotalScore) {
-            this.totalScore = Number(savedTotalScore);
-        }
-
-        const infosLieux = localStorage.getItem('infosLieux');
-        if (infosLieux) {
-            const parsedInfosLieux = JSON.parse(infosLieux);
-            if (parsedInfosLieux.data && Array.isArray(parsedInfosLieux.data)) {
-                this.lieux = parsedInfosLieux.data;
-                this.loadNewLocation();
-            } else {
-                console.error('Les données du localStorage ne sont pas au format attendu.');
-            }
-        } else {
-            console.error('Aucune donnée de lieu n\'a été trouvée dans le localStorage.');
-        }
+        this.game();
     },
     methods: {
-        startTimer() {
-            if (!this.timerInterval) {
-                this.timerInterval = setInterval(() => {
-                    if (this.timeRemaining === 0) {
-                        clearInterval(this.timerInterval);
-                        this.currentRound++;
-                        localStorage.setItem('currentRound', this.currentRound);
+        game() {
+            this.index = localStorage.getItem('index');
 
-                        if (!this.marker) {
-                            this.updateScore(1);
+            const parsedInfosLieux = JSON.parse(localStorage.getItem('infosLieux'));
+            try {
+                this.lieux = parsedInfosLieux.data;
+                const currentLieu = this.lieux[this.index];
+                this.imageCoordinates = currentLieu.localisation.coordinates;
+                console.log(this.imageCoordinates);
+
+                this.fondImage = currentLieu.image;
+            } catch (error) {
+                console.error('Les données des lieux ne sont pas au format attendu.');
+            }
+
+            
+            this.totalScore = parseInt(localStorage.getItem('totalScore')) || 0;
+            this.currentRound = parseInt(localStorage.getItem('currentRound')) || 1;
+            this.stopTimer = false;
+            this.timeRemaining = 60;
+
+            this.startTimer();
+        },
+
+
+        startTimer() {
+            if (!this.timerInterval && !this.stopTimer) {
+                this.timerInterval = setInterval(() => {
+                    if (this.timeRemaining === 0 || this.stopTimer) {
+                        clearInterval(this.timerInterval);
+                        this.timerInterval = null;
+                        if (this.timeRemaining === 0) {
+                            this.currentRound++;
+                            localStorage.setItFem('currentRound', this.currentRound);
+                            this.redirectToFinRound();
                         }
-                        this.redirectToFinRound();
-                    } else {
+                    } else if (!this.isPaused) {
                         this.timeRemaining--;
                     }
                 }, 1000);
             }
         },
+
         pauseTimer() {
             if (this.timerInterval) {
                 clearInterval(this.timerInterval);
                 this.timerInterval = null;
-                console.log(this.imageCoordinates);
+                this.isPaused = true;
             }
         },
         toggleTimer() {
-            if (this.timerInterval) {
-                this.pauseTimer();
-                this.isPaused = true;
-            } else {
-                this.startTimer();
-                this.isPaused = false;
-            }
-        },
+    this.isPaused = !this.isPaused;
+},
         redirectToFinRound() {
             if (this.currentRound >= 6) {
+
+
+                this.pauseTimer();
+                this.index++;
+                this.stopTimer = true;
+                localStorage.setItem('index', this.index);
+
                 this.$router.push('/FinJeu');
-                this.pauseTimer();
-                this.timeRemaining = 30;
             } else {
-                this.$router.push('/FinRound');
                 this.pauseTimer();
-                this.timeRemaining = 30;
+                this.stopTimer = true;
+                this.index++;
+                localStorage.setItem('index', this.index);
+                this.$router.push('/FinRound');
             }
         },
         checkDistance() {
             if (this.marker) {
                 const distance = this.calculateDistance(this.marker.coordinates, this.imageCoordinates);
+                console.log(distance);
                 this.updateScore(distance);
                 this.marker = null;
-                if (this.currentRound < 6) {
-                    this.currentRound++;
-                    localStorage.setItem('currentRound', this.currentRound);
-                    this.pauseTimer();
-                    this.timeRemaining = 30;
-                    this.loadNewLocation(); // Charger un nouveau lieu à deviner
-                }
-                if (this.currentRound >= 6) {
-                    this.$router.push('/FinJeu');
-                }
+                this.currentRound++;
+                localStorage.setItem('currentRound', this.currentRound);
+                this.redirectToFinRound();
+
+
             }
         },
         calculateDistance(coord1, coord2) {
-            return Math.sqrt(Math.pow(coord1[0] - coord2[0], 2) + Math.pow(coord1[1] - coord2[1], 2));
+            return Math.sqrt(Math.pow(coord1[0] - coord2[0], 2) + Math.pow(coord1[1] - coord2[1], 2)) / 2;
         },
         updateScore(distance) {
-            if (distance < 0.01) {
+            if (distance < 5) {
+                this.score = 10 * this.timeRemaining;
+            } else if (distance < 25) {
                 this.score = 5 * this.timeRemaining;
-            } else if (distance < 0.05) {
-                this.score = 5 * this.timeRemaining;
-            } else if (distance < 0.1) {
-                this.score = 1 * this.timeRemaining;
-            } else {
+            } else if (distance < 100) {
+                this.score = 2 * this.timeRemaining;
+            } else if (distance < 200) {
+                this.score = this.timeRemaining;
+            }
+            else {
                 this.score = 0;
             }
             this.totalScore += this.score;
@@ -199,18 +193,6 @@ export default {
             this.marker = {
                 coordinates: [event.latlng.lat, event.latlng.lng]
             };
-        },
-        beforeRouteLeave(to, from, next) {
-            this.pauseTimer();
-            this.timeRemaining = 30;
-            next();
-        },
-        loadNewLocation() {
-            if (this.currentLieuIndex < this.lieux.length) {
-                this.currentLieu = this.lieux[this.currentLieuIndex++];
-                this.imageCoordinates = this.currentLieu.localisation.coordinates;
-                this.fondImage = this.currentLieu.image;
-            }
         },
     },
 };
@@ -350,9 +332,11 @@ h2 {
     transition: width 0.3s ease, height 0.3s ease;
     /* Ajout de la transition de taille */
     position: absolute;
+    z-index: 5;
     bottom: 0;
     right: 0;
     margin: 10px;
+    width: 90%;
 }
 
 .custom-button:hover {

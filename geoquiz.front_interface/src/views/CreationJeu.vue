@@ -104,6 +104,9 @@ export default {
                   const serieActuelle = this.infosSeries.find(serie => serie.id === id);
                   localStorage.setItem('infosSeries', JSON.stringify(serieActuelle));
                   localStorage.setItem('infosLieux', JSON.stringify(this.infosLieux));
+                  localStorage.setItem('index', 0);
+                  localStorage.setItem('score', 0);
+                  localStorage.setItem('currentRound', 1);
                   this.$router.push('/jeu');
                 })
                 .catch(error => {
