@@ -358,7 +358,7 @@ h2 {
   transition: width 0.3s ease, height 0.3s ease;
   /* Ajout de la transition de taille */
   position: absolute;
-  z-index: 5;
+  z-index: 1;
   bottom: 0;
   right: 0;
   margin: 10px;
