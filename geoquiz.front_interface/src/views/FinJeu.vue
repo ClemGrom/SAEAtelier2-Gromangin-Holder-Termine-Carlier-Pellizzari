@@ -12,58 +12,77 @@
     <footer>
       <img src="@/assets/share.svg" alt="Quit" class="share" />
       <router-link :to="{ path: '/creation-jeu' }" class="restart" @click="resetScoreAndRound">Rejouer</router-link>
-      <img src="@/assets/quit.svg" alt="Quit" class="quit" />
+      <router-link :to="{ path: '/' }">
+           <button><img src="@/assets/quit.svg" alt="Quit" class="quit" /></button>
+        </router-link>
     </footer>
   </div>
 </template>
 
 <script>
+// Import du module Axios pour les requêtes HTTP
 import axios from 'axios';
 
 export default {
+  // Nom du composant
   name: 'FinRound',
+  // Données du composant
   data() {
     return {
+      // Score du tour actuel récupéré depuis le stockage local ou initialisé à 0
       score: parseInt(localStorage.getItem('score')) || 0,
+      // Numéro du tour récupéré depuis le stockage local ou initialisé à 1
       round: parseInt(localStorage.getItem('round')) || 1,
-      totalScore: parseInt(localStorage.getItem('totalScore'))|| 0,
+      // Score total récupéré depuis le stockage local ou initialisé à 0
+      totalScore: parseInt(localStorage.getItem('totalScore')) || 0,
+      // Jeton d'authentification récupéré depuis le stockage local
       token: localStorage.getItem('token'),
+      // Identifiant du jeu récupéré depuis le stockage local
       idgame: localStorage.getItem('idgame'),
+      // Client Axios pour effectuer des requêtes HTTP
       apiClient: axios.create({
         withCredentials: false
       }),
     };
   },
+  // Méthodes du composant
   methods: {
+    // Réinitialisation du score et du numéro du tour
     resetScoreAndRound() {
-      // Réinitialiser le score et le round par défaut
+      // Effacement de toutes les données stockées localement
       localStorage.clear();
-      // Mettre à jour les données du composant
+      // Réinitialisation des données du composant
       this.score = 0;
       this.round = 1;
-      this.totalScore =0;
+      this.totalScore = 0;
     },
+    // Soumission du score au serveur
     submitScore() {
-      this.apiClient.post(`http://docketu.iutnc.univ-lorraine.fr:5015/api/games/${this.idgame}/submit`, { 
+      this.apiClient.post(`http://docketu.iutnc.univ-lorraine.fr:5015/api/games/${this.idgame}/submit`, {
+        // Données à envoyer dans la requête
         headers: {
-          'Authorization': `Bearer ${this.token}`
+          'Authorization': `Bearer ${this.token}` // Ajout du jeton d'authentification dans les en-têtes
         },
-        score: this.totalScore 
+        score: this.totalScore // Score total à envoyer
       })
         .then(response => {
-          
-          console.log(response.data);
+          // Traitement de la réponse du serveur en cas de succès
+          console.log(response.data); // Affichage des données renvoyées par le serveur
         })
         .catch(error => {
-          console.error(error);
+          // Gestion des erreurs en cas d'échec de la requête
+          console.error(error); // Affichage de l'erreur dans la console
         });
     }
   },
+  // Fonction exécutée lorsque le composant est monté dans le DOM
   mounted() {
+    // Appel de la méthode submitScore pour soumettre le score au serveur
     this.submitScore();
   }
 };
 </script>
+
 
 <style scoped>
   @import url('https://fonts.googleapis.com/css2?family=Lalezar&display=swap');
