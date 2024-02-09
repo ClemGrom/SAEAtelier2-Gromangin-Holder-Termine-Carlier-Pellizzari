@@ -69,7 +69,7 @@ export default {
       console.log('Id du jeu :', this.idgame);
       console.log('Score total :', this.totalScore);
       console.log('Token :', this.token);
-      this.apiClient.post(`http://docketu.iutnc.univ-lorraine.fr:5015/api/games/${this.idgame}/submit/`, {
+      this.apiClient.post(`http://docketu.iutnc.univ-lorraine.fr:50015/api/games/${this.idgame}/submit/`, {
         // Données à envoyer dans la requête
 
         score: this.totalScore // Score total à envoyer
