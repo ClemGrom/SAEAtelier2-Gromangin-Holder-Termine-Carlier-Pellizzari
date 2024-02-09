@@ -169,6 +169,8 @@ export default {
   mounted() {
     this.getSeries();
     this.getDifficultes();
+    localStorage.setItem('totalScore', 0);
+
     //Rediriger vers connexion si non connecté (bearer token)
     if (!localStorage.getItem('token')) {
       this.$router.push('/login');

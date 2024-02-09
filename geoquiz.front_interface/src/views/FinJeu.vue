@@ -93,7 +93,7 @@ export default {
   mounted() {
     // Appel de la méthode submitScore pour soumettre le score au serveur
     this.submitScore();
-    localStorage.setItem('totalScore', 0);
+
   }
 };
 </script>
