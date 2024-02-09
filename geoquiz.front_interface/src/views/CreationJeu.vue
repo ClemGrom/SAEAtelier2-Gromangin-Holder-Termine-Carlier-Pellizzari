@@ -4,19 +4,37 @@
       <h2 class="main-title text-center rounded">Choix de la difficulté : </h2>
       <div class="col-lg-12 d-flex flex-column justify-content-center">
         <div class="d-flex justify-content-around text-dark">
-          <div v-for="difficulte in this.difficultes" :key="difficulte.difficulty_id">
-              <button
-                  class="btn text-white btn-no-hover"
-                  :class="{
-                      'btn-success': selectedDifficulty === difficulte.level_name && difficulte.level_name === 'easy',
-                      'btn-warning': selectedDifficulty === difficulte.level_name && difficulte.level_name === 'normal',
-                      'btn-danger': selectedDifficulty === difficulte.level_name && difficulte.level_name === 'hard'
-                  }"
-                  @click="setDifficulty(difficulte.level_name)">
-                  {{ difficulte.level_name }}
-              </button>
-          </div>
-        </div>
+        <button
+            class="btn text-white btn-no-hover"
+            :class="{
+                'btn-success': selectedDifficulty === 'easy',
+                'btn-warning': selectedDifficulty === 'normal',
+                'btn-danger': selectedDifficulty === 'hard'
+            }"
+            @click="setDifficulty('easy')">
+            Facile
+        </button>
+        <button
+            class="btn text-white btn-no-hover"
+            :class="{
+                'btn-success': selectedDifficulty === 'easy',
+                'btn-warning': selectedDifficulty === 'normal',
+                'btn-danger': selectedDifficulty === 'hard'
+            }"
+            @click="setDifficulty('normal')">
+            Normal
+        </button>
+        <button
+            class="btn text-white btn-no-hover"
+            :class="{
+                'btn-success': selectedDifficulty === 'easy',
+                'btn-warning': selectedDifficulty === 'normal',
+                'btn-danger': selectedDifficulty === 'hard'
+            }"
+            @click="setDifficulty('hard')">
+            Difficile
+        </button>
+      </div>
 
         <h2 class="main-title text-center">Choix de la série</h2>
 
@@ -65,13 +83,12 @@ export default {
       }),
       difficultes: null,
       token: localStorage.getItem('token'),
-      selectedDifficulty: null,
+      selectedDifficulty: easy,
     };
   },
   methods: {
     setDifficulty(difficulty) {
-      this.selectedDifficulty = level_name;
-      this.difficulty = difficulty;
+      this.selectedDifficulty = difficulty;
     },
     createGame() {
       // Implémentez la logique de création de la partie ici
@@ -120,7 +137,7 @@ export default {
                       localStorage.setItem('score', 0);
                       localStorage.setItem('currentRound', 1);
                       this.apiClient.post('http://docketu.iutnc.univ-lorraine.fr:50015/api/games/', {
-                            "difficulty_id": this.difficulty,
+                            "difficulty_id": this.selectedDifficulty,
                             "serie_id": id,
                           }, {
                             headers: {
