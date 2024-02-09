@@ -28,7 +28,10 @@ export default {
       round: parseInt(localStorage.getItem('round')) || 1,
       totalScore: parseInt(localStorage.getItem('totalScore'))|| 0,
       token: localStorage.getItem('token'),
-      idgame: 'your_game_id', // Remplacez 'your_game_id' par l'ID de votre jeu
+      idgame: localStorage.getItem('idgame'),
+      apiClient: axios.create({
+        withCredentials: false
+      }),
     };
   },
   methods: {
@@ -41,7 +44,7 @@ export default {
       this.totalScore =0;
     },
     submitScore() {
-      axios.post(`http://docketu.iutnc.univ-lorraine.fr:5015/api/games/${this.idgame}/submit`, { 
+      this.apiClient.post(`http://docketu.iutnc.univ-lorraine.fr:5015/api/games/${this.idgame}/submit`, { 
         headers: {
           'Authorization': `Bearer ${this.token}`
         },
