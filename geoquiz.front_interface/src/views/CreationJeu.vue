@@ -12,7 +12,7 @@
                       'btn-warning': selectedDifficulty === difficulte.level_name && difficulte.level_name === 'normal',
                       'btn-danger': selectedDifficulty === difficulte.level_name && difficulte.level_name === 'hard'
                   }"
-                  @click="setDifficulty(difficulte.level_name)">
+                  @click="setDifficulty(difficulte)">
                   {{ difficulte.level_name }}
               </button>
           </div>
@@ -70,8 +70,8 @@ export default {
   },
   methods: {
     setDifficulty(difficulty) {
-      this.selectedDifficulty = level_name;
-      this.difficulty = difficulty;
+      this.selectedDifficulty = difficulty.level_name;
+      this.difficulty = difficulty.difficulty_id;
     },
     createGame() {
       // Implémentez la logique de création de la partie ici
