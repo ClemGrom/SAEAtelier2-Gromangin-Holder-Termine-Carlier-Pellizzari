@@ -11,7 +11,7 @@
 
     <footer>
       <img src="@/assets/share.svg" alt="Quit" class="share" />
-      <router-link :to="{ path: '/jeu' }" class="restart" @click="resetScoreAndRound">Rejouer</router-link>
+      <router-link :to="{ path: '/creation-jeu' }" class="restart" @click="resetScoreAndRound">Rejouer</router-link>
       <img src="@/assets/quit.svg" alt="Quit" class="quit" />
     </footer>
   </div>

@@ -111,6 +111,7 @@ services:
     ports:
       - 50010:8055
     volumes:
+      - ./geoquiz.series/database:/directus/database
       - ./geoquiz.series/uploads:/directus/uploads
     depends_on:
       geoquiz-series_cache:

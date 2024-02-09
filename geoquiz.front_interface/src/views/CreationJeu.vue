@@ -23,7 +23,7 @@
             <div v-for="serie in this.infosSeries" :key="serie.id"
                  class="series-card col-lg-3 mb-2 bg-custom text-white rounded">
               <h3>{{ serie.nom }}</h3>
-              <img :src="(`@/assets/${serie.nomImage}`)" alt="Image de la série" class="img-fluid">
+              <img :src="'http://docketu.iutnc.univ-lorraine.fr:50010/assets/' + serie.image+'/'+serie.nomImage" alt="Image de la série" class="img-fluid">
               <p>{{ serie.description }}</p>
               <p>Meilleur score : {{ serie.bestScore || '--' }}</p>
               <button class="btn btn-success" @click="getLieux(serie.id)">Choisir cette série</button>
@@ -106,6 +106,9 @@ export default {
                   const serieActuelle = this.infosSeries.find(serie => serie.id === id);
                   localStorage.setItem('infosSeries', JSON.stringify(serieActuelle));
                   localStorage.setItem('infosLieux', JSON.stringify(this.infosLieux));
+                  localStorage.setItem('index', 0);
+                  localStorage.setItem('score', 0);
+                  localStorage.setItem('currentRound', 1);
                   this.$router.push('/jeu');
                 })
                 .catch(error => {
