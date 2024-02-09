@@ -55,6 +55,7 @@ export default {
       this.score = 0;
       this.round = 1;
       this.totalScore = 0;
+
     },
     // Soumission du score au serveur
     submitScore() {
@@ -81,6 +82,7 @@ export default {
   mounted() {
     // Appel de la méthode submitScore pour soumettre le score au serveur
     this.submitScore();
+    localStorage.setItem('totalScore', 0);
   }
 };
 </script>
