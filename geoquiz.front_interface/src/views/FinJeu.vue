@@ -58,12 +58,14 @@ export default {
     },
     // Soumission du score au serveur
     submitScore() {
-      this.apiClient.post(`http://docketu.iutnc.univ-lorraine.fr:5015/api/games/${this.idgame}/submit`, {
+      this.apiClient.post(`http://docketu.iutnc.univ-lorraine.fr:5015/api/games/${this.idgame}/submit/`, {
         // Données à envoyer dans la requête
+
+        score: this.totalScore // Score total à envoyer
+        },{
         headers: {
           'Authorization': `Bearer ${this.token}` // Ajout du jeton d'authentification dans les en-têtes
         },
-        score: this.totalScore // Score total à envoyer
       })
         .then(response => {
           // Traitement de la réponse du serveur en cas de succès
