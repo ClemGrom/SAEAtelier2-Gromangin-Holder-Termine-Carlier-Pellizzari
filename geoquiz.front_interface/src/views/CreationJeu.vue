@@ -3,30 +3,31 @@
     <div class="row w-100 text-white">
       <h2 class="main-title text-center rounded">Choix de la difficulté : </h2>
       <div class="col-lg-12 d-flex flex-column justify-content-center">
-        <div class="text-center mb-3">Choix de la difficulté</div>
-        <div class="d-flex justify-content-around mt-5 text-dark">
-            <div v-for="difficulte in this.difficultes" :key="difficulte.difficulty_id">
-                <button
-                    class="btn text-white btn-no-hover" 
-                    :class="{
-                        'btn-success': difficulte.level_name === 'easy', 
-                        'btn-warning': difficulte.level_name === 'normal', 
-                        'btn-danger': difficulte.level_name === 'hard' 
-                    }"
-                    @click="setDifficulty(difficulte.level_name)">
-                    {{ difficulte.level_name }}
-                </button>
-            </div>
+        <div class="d-flex justify-content-around text-dark">
+          <div v-for="difficulte in this.difficultes" :key="difficulte.difficulty_id">
+              <button
+                  class="btn text-white btn-no-hover" 
+                  :class="{
+                      'btn-success': selectedDifficulty === difficulte.level_name && difficulte.level_name === 'easy', 
+                      'btn-warning': selectedDifficulty === difficulte.level_name && difficulte.level_name === 'normal', 
+                      'btn-danger': selectedDifficulty === difficulte.level_name && difficulte.level_name === 'hard' 
+                  }"
+                  @click="setDifficulty(difficulte.level_name)">
+                  {{ difficulte.level_name }}
+              </button>
+          </div>
         </div>
-        <h2 class="main-title text-center">Choix de la série</h2>   
-      </div>
+
+        <h2 class="main-title text-center">Choix de la série</h2>
+
+        </div>
       
       <div class="bg-white rounded">
 
         <div class="col-lg-12 bg-white text-dark">
           <div class="mt-5 series-container row ">
             <div v-for="serie in this.infosSeries" :key="serie.id"
-                 class="series-card col-lg-3 mb-2 bg-custom text-white rounded">
+               class="series-card col-lg-3 col-md-6 col-sm-12 mb-2 bg-custom text-white rounded">
               <h3>{{ serie.nom }}</h3>
               <img :src="'http://docketu.iutnc.univ-lorraine.fr:50010/assets/' + serie.image+'/'+serie.nomImage" alt="Image de la série" class="img-fluid">
               <p>{{ serie.description }}</p>
@@ -61,11 +62,13 @@ export default {
       apiClient: axios.create({
         withCredentials: false
       }),
-      difficultes: null
+      difficultes: null,
+      selectedDifficulty: null,
     };
   },
   methods: {
     setDifficulty(difficulty) {
+      this.selectedDifficulty = level_name;
       this.difficulty = difficulty;
     },
     createGame() {
@@ -220,8 +223,8 @@ export default {
 }
 
 .series-card img {
-  height: 200px;
-  width: 200px;
+  height: 50%;
+  width: 100%;
   object-fit: cover;
 }
 </style>
