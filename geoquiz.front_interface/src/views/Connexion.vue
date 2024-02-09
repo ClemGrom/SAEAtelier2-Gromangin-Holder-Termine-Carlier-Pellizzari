@@ -53,7 +53,7 @@ export default {
         };
         authService.signIn(credentials).then((response) => {
           console.log('Utilisateur connecté:', response);
-          router.push('/dashboard');
+          router.push('/');
         });
       } catch (error) {
         console.error('Erreur lors de la connexion:', error.message);
