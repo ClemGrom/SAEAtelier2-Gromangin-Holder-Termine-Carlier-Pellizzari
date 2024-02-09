@@ -29,7 +29,7 @@
       <h2>Temps restant : {{ timeRemaining }}</h2>
     </div>
 
-    <div class="indice>">
+    <div class="indice" v-if="timeRemaining<=30">
       <p>{{ this.indice }}</p>
     </div>
 
@@ -279,7 +279,6 @@ h2 {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   margin-bottom: 20px;
   display: flex;
-  visibility: hidden;
 }
 
 .timer {
@@ -382,7 +381,6 @@ h2 {
   justify-content: center;
   align-items: center;
   z-index: 999;
-  /* Assurez-vous que le popup apparaît au-dessus de tout le reste */
 }
 
 .modal-content {
@@ -406,7 +404,7 @@ h2 {
   color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin: 10px;
+  margin: auto;
 }
 
 .modal-content button.quitter {
