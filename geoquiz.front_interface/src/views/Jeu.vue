@@ -310,6 +310,7 @@ h2 {
   color: white;
   position: absolute;
   bottom: 0;
+  align-items: center;
   margin-left: 20px;
   padding: 10px;
   border-radius: 10px;
