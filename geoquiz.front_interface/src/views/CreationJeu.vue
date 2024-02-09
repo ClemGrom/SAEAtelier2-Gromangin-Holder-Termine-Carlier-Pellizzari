@@ -119,7 +119,7 @@ export default {
                       localStorage.setItem('index', 0);
                       localStorage.setItem('score', 0);
                       localStorage.setItem('currentRound', 1);
-                      this.apiClient.post('http://docketu.iutnc.univ-lorraine.fr:50015/api/games', {
+                      this.apiClient.post('http://docketu.iutnc.univ-lorraine.fr:50015/api/games/', {
                             "difficulty_id": this.difficulty,
                             "serie_id": id,
                           }, {
