@@ -47,6 +47,7 @@
 </template>
 
 <script>
+// Import des feuilles de style et des composants Leaflet nécessaires
 import 'leaflet/dist/leaflet.css';
 import {LMap, LMarker, LTileLayer} from '@vue-leaflet/vue-leaflet';
 
@@ -59,30 +60,51 @@ export default {
   },
   data() {
     return {
+      // URL du serveur de tuiles OpenStreetMap
       osmURL: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      // Centre de la carte initialisé à (0, 0)
       center: [0, 0],
+      // Zoom par défaut de la carte
       defaultZoom: 1,
+      // Niveau de zoom maximum de la carte
       maxZoom: 18,
+      // Niveau de zoom minimum de la carte
       minZoom: 1,
+      // Marqueur sur la carte
       marker: null,
+      // Temps restant en secondes
       timeRemaining: 60,
+      // Intervalle du minuteur
       timerInterval: null,
+      // Score de la partie actuelle
       score: 0,
+      // Indicateur de pause du minuteur
       isPaused: false,
+      // Score total accumulé
       totalScore: 0,
+      // Indicateur de l'expansion de la carte
       isMapExpanded: false,
+      // Coordonnées de l'image à trouver
       imageCoordinates: [48.6936219, 6.1806664],
+      // Numéro du tour actuel
       currentRound: 1,
+      // Lieux à découvrir
       lieux: [],
+      // Fond d'image
       fondImage: null,
+      // Index du lieu actuel
       index: 0,
+      // Indicateur d'arrêt du minuteur
       stopTimer: false,
+      // Indice pour aider le joueur
       indice: null,
     };
   },
   mounted() {
+    // Récupération des informations sur la série depuis le stockage local
     const serie = JSON.parse(localStorage.getItem('infosSeries'));
     try {
+      // Initialisation du centre et du zoom de la carte avec les données de la série
       this.center = [serie.defaultLong, serie.defaultLat]
       this.defaultZoom = serie.defaultZoom;
       this.maxZoom = serie.maxZoom;
@@ -90,39 +112,44 @@ export default {
     } catch (error) {
       console.error('Les données des séries ne sont pas au format attendu.');
     }
+    // Lancement du jeu
     this.game();
-    //affiche la div indice si le temps est inférieur à 30 sec
+    // Affichage de l'indice si le temps restant est inférieur à 30 secondes
     if (this.timeRemaining < 30) {
       document.querySelector('.indice').style.visibility = 'visible';
     }
   },
   methods: {
+    // Fonction de démarrage du jeu
     game() {
+      // Récupération de l'index actuel depuis le stockage local
       this.index = localStorage.getItem('index');
 
+      // Récupération des informations sur les lieux depuis le stockage local
       const parsedInfosLieux = JSON.parse(localStorage.getItem('infosLieux'));
       try {
+        // Initialisation des lieux avec les données récupérées
         this.lieux = parsedInfosLieux.data;
         const currentLieu = this.lieux[this.index];
         this.indice = currentLieu.indice;
         this.imageCoordinates = currentLieu.localisation.coordinates;
-        console.log(this.imageCoordinates);
 
         this.fondImage = currentLieu.image;
       } catch (error) {
         console.error('Les données des lieux ne sont pas au format attendu.');
       }
 
-
+      // Récupération du score total depuis le stockage local ou initialisation à 0
       this.totalScore = parseInt(localStorage.getItem('totalScore')) || 0;
+      // Récupération du numéro du tour actuel depuis le stockage local ou initialisation à 1
       this.currentRound = parseInt(localStorage.getItem('currentRound')) || 1;
+      // Réinitialisation du minuteur et démarrage du jeu
       this.stopTimer = false;
       this.timeRemaining = 60;
-
       this.startTimer();
     },
 
-
+    // Fonction de démarrage du minuteur
     startTimer() {
       if (!this.timerInterval && !this.stopTimer) {
         this.timerInterval = setInterval(() => {
@@ -130,8 +157,9 @@ export default {
             clearInterval(this.timerInterval);
             this.timerInterval = null;
             if (this.timeRemaining === 0) {
+              // Passage au tour suivant lorsque le temps est écoulé
               this.currentRound++;
-              localStorage.setItFem('currentRound', this.currentRound);
+              localStorage.setItem('currentRound', this.currentRound);
               this.redirectToFinRound();
             }
           } else if (!this.isPaused) {
@@ -141,6 +169,7 @@ export default {
       }
     },
 
+    // Fonction de pause du minuteur
     pauseTimer() {
       if (this.timerInterval) {
         clearInterval(this.timerInterval);
@@ -148,20 +177,23 @@ export default {
         this.isPaused = true;
       }
     },
+
+    // Fonction pour activer ou désactiver la pause du minuteur
     toggleTimer() {
       this.isPaused = !this.isPaused;
     },
+
+    // Redirection vers la page de fin de tour
     redirectToFinRound() {
       if (this.currentRound >= 6) {
-
-
+        // Si tous les tours sont terminés, redirection vers la page de fin de jeu
         this.pauseTimer();
         this.index++;
         this.stopTimer = true;
         localStorage.setItem('index', this.index);
-
         this.$router.push('/FinJeu');
       } else {
+        // Sinon, redirection vers la page de fin de tour
         this.pauseTimer();
         this.stopTimer = true;
         this.index++;
@@ -169,22 +201,25 @@ export default {
         this.$router.push('/FinRound');
       }
     },
+
+    // Vérification de la distance entre le marqueur et l'emplacement de l'image
     checkDistance() {
       if (this.marker) {
         const distance = this.calculateDistance(this.marker.coordinates, this.imageCoordinates);
-        console.log(distance);
         this.updateScore(distance);
         this.marker = null;
         this.currentRound++;
         localStorage.setItem('currentRound', this.currentRound);
         this.redirectToFinRound();
-
-
       }
     },
+
+    // Calcul de la distance entre deux coordonnées
     calculateDistance(coord1, coord2) {
       return Math.sqrt(Math.pow(coord1[0] - coord2[0], 2) + Math.pow(coord1[1] - coord2[1], 2)) / 2;
     },
+
+    // Mise à jour du score en fonction de la distance et du temps restant
     updateScore(distance) {
       if (distance < 5) {
         this.score = 10 * this.timeRemaining;
@@ -197,10 +232,13 @@ export default {
       } else {
         this.score = 0;
       }
+      // Ajout du score au score total et sauvegarde dans le stockage local
       this.totalScore += this.score;
       localStorage.setItem('score', this.score);
       localStorage.setItem('totalScore', this.totalScore);
     },
+
+    // Gestion du clic sur la carte pour placer le marqueur
     onMapClick(event) {
       this.marker = {
         coordinates: [event.latlng.lat, event.latlng.lng]
