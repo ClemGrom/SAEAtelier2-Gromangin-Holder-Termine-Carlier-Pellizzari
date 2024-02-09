@@ -50,7 +50,15 @@ export default {
     // Réinitialisation du score et du numéro du tour
     resetScoreAndRound() {
       // Effacement de toutes les données stockées localement
+      // Stoquer les tokens
+      const token = localStorage.getItem('token');
+      const refreshToken = localStorage.getItem('refreshToken');
       localStorage.clear();
+
+      // Restaurer les tokens
+      localStorage.setItem('token', token);
+      localStorage.setItem('refreshToken', refreshToken);
+
       // Réinitialisation des données du composant
       this.score = 0;
       this.round = 1;
@@ -59,7 +67,10 @@ export default {
     },
     // Soumission du score au serveur
     submitScore() {
-      this.apiClient.post(`http://docketu.iutnc.univ-lorraine.fr:5015/api/games/${this.idgame}/submit/`, {
+      console.log('Id du jeu :', this.idgame);
+      console.log('Score total :', this.totalScore);
+      console.log('Token :', this.token);
+      this.apiClient.post(`http://docketu.iutnc.univ-lorraine.fr:50015/api/games/${this.idgame}/submit/`, {
         // Données à envoyer dans la requête
 
         score: this.totalScore // Score total à envoyer
