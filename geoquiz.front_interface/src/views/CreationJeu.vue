@@ -6,7 +6,7 @@
         <div class="d-flex justify-content-around text-dark">
           <div v-for="difficulte in this.difficultes" :key="difficulte.difficulty_id">
               <button
-                  class="btn text-white btn-no-hover"
+                  class="btn text-white"
                   :class="{
                       'btn-success': selectedDifficulty === difficulte.level_name && difficulte.level_name === 'easy',
                       'btn-warning': selectedDifficulty === difficulte.level_name && difficulte.level_name === 'normal',
@@ -205,10 +205,6 @@ export default {
   text-decoration: none;
   cursor: pointer;
   background-color: #22364B;
-}
-
-.btn-no-hover:hover {
-  background-color: inherit !important;
 }
 
 .bg-button {
