@@ -18,13 +18,12 @@
                 </button>
             </div>
         </div>
-        <div class="text-center mt-3">Choix de la série</div>
+        <h2 class="main-title text-center">Choix de la série</h2>   
       </div>
       
       <div class="bg-white rounded">
 
         <div class="col-lg-12 bg-white text-dark">
-          <h2 class="main-title text-center">Choix de la série</h2>
           <div class="mt-5 series-container row ">
             <div v-for="serie in this.infosSeries" :key="serie.id"
                  class="series-card col-lg-3 mb-2 bg-custom text-white rounded">
@@ -164,6 +163,7 @@ export default {
 <style scoped>
 .bg-custom {
   background-color: #22364B;
+  overflow: hidden;
 }
 
 .row {
@@ -174,6 +174,7 @@ export default {
 .main-title {
   font-size: 48px;
   margin-bottom: 20px;
+  margin-top: 20px;
   font-weight: bold;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
@@ -206,5 +207,22 @@ export default {
   margin-left: 70px;
 }
 
+.btn-success {
+  background-color: #28a745;
+}
+
+.btn-warning {
+  background-color: #ffc107;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+}
+
+.series-card img {
+  height: 200px;
+  width: 200px;
+  object-fit: cover;
+}
 </style>
   
