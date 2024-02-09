@@ -38,7 +38,7 @@ export default {
       // Jeton d'authentification récupéré depuis le stockage local
       token: localStorage.getItem('token'),
       // Identifiant du jeu récupéré depuis le stockage local
-      idgame: localStorage.getItem('idgame'),
+      idgame: localStorage.getItem('game_id'),
       // Client Axios pour effectuer des requêtes HTTP
       apiClient: axios.create({
         withCredentials: false
