@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'FinRound',
   data() {
@@ -25,6 +27,8 @@ export default {
       score: parseInt(localStorage.getItem('score')) || 0,
       round: parseInt(localStorage.getItem('round')) || 1,
       totalScore: parseInt(localStorage.getItem('totalScore'))|| 0,
+      token: localStorage.getItem('token'),
+      idgame: 'your_game_id', // Remplacez 'your_game_id' par l'ID de votre jeu
     };
   },
   methods: {
@@ -35,7 +39,25 @@ export default {
       this.score = 0;
       this.round = 1;
       this.totalScore =0;
+    },
+    submitScore() {
+      axios.post(`http://docketu.iutnc.univ-lorraine.fr:5015/api/games/${this.idgame}/submit`, { 
+        headers: {
+          'Authorization': `Bearer ${this.token}`
+        },
+        score: this.totalScore 
+      })
+        .then(response => {
+          
+          console.log(response.data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
     }
+  },
+  mounted() {
+    this.submitScore();
   }
 };
 </script>
