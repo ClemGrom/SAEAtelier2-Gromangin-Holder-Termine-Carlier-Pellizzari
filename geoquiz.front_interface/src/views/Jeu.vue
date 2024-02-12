@@ -216,11 +216,12 @@ export default {
 
     // Calcul de la distance entre deux coordonnées
     calculateDistance(coord1, coord2) {
-      return Math.sqrt(Math.pow(coord1[0] - coord2[0], 2) + Math.pow(coord1[1] - coord2[1], 2)) / 2;
+      return Math.sqrt(Math.pow(coord1[0] - coord2[0], 2) + Math.pow(coord1[1] - coord2[1], 2));
     },
 
     // Mise à jour du score en fonction de la distance et du temps restant
     updateScore(distance) {
+      echo(distance);
     let baseScore = 0;
     const D = 25;
 
@@ -240,7 +241,7 @@ export default {
     } else if (timeElapsed <= 10) {
       timeMultiplier = 2;
     } else if (timeElapsed > 20) {
-      baseScore = 0; // Les points ne sont pas acquis pour une réponse en plus de 20s
+      timeMultiplier = 1; // Les points ne sont pas acquis pour une réponse en plus de 20s
     }
 
     this.score = baseScore * timeMultiplier;
