@@ -218,15 +218,11 @@ export default {
 
     // Calcul de la distance entre deux coordonnées
     calculateDistance(coord1, coord2) {
-      console.log("Coordonnées image: " + coord2);
-      console.log("Coordonnées marqueur" + coord1);
-      console.log("Distance sans la racine carrée" + Math.pow(coord2[0] - coord1[0], 2) + Math.pow(coord2[1] - coord1[1], 2));
       return Math.sqrt(Math.pow(coord2[1] - coord1[0], 2) + Math.pow(coord2[0] - coord1[1], 2));
     },
 
     // Mise à jour du score en fonction de la distance et du temps restant
     updateScore(distance) {
-      console.log(distance);
       let baseScore = 0;
 
       if (distance < 0.001) {
@@ -268,7 +264,6 @@ export default {
       this.marker = {
         coordinates: [event.latlng.lat, event.latlng.lng]
       };
-      console.log(this.marker.coordinates);
     },
   },
 };
