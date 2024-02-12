@@ -19,7 +19,9 @@
         <l-tile-layer :url="osmURL"/>
         <l-marker v-if="marker" :lat-lng="marker.coordinates"></l-marker>
       </l-map>
-      <router-link :to="{ path: '/FinRound' }" class="custom-button" @click="checkDistance" :disabled="!marker">Envoyer</router-link>
+      <router-link :to="{ path: '/FinRound' }" class="custom-button" @click="checkDistance" :disabled="!marker">
+        Envoyer
+      </router-link>
     </div>
 
     <div class="timer">
@@ -221,36 +223,36 @@ export default {
 
     // Mise à jour du score en fonction de la distance et du temps restant
     updateScore(distance) {
-      echo(distance);
-    let baseScore = 0;
-    const D = 25;
+      console.log(distance);
+      let baseScore = 0;
+      const D = 25;
 
-    if (distance > D) {
-      baseScore = 5;
-    } else if (distance > 2 * D) {
-      baseScore = 3;
-    } else if (distance > 3 * D) {
-      baseScore = 1;
-    }
+      if (distance > D) {
+        baseScore = 5;
+      } else if (distance > 2 * D) {
+        baseScore = 3;
+      } else if (distance > 3 * D) {
+        baseScore = 1;
+      }
 
-    let timeMultiplier = 1;
-    const timeElapsed = 60 - this.timeRemaining;
+      let timeMultiplier = 1;
+      const timeElapsed = 60 - this.timeRemaining;
 
-    if (timeElapsed <= 5) {
-      timeMultiplier = 4;
-    } else if (timeElapsed <= 10) {
-      timeMultiplier = 2;
-    } else if (timeElapsed > 20) {
-      timeMultiplier = 1; // Les points ne sont pas acquis pour une réponse en plus de 20s
-    }
+      if (timeElapsed <= 5) {
+        timeMultiplier = 4;
+      } else if (timeElapsed <= 10) {
+        timeMultiplier = 2;
+      } else if (timeElapsed > 20) {
+        timeMultiplier = 1; // Les points ne sont pas acquis pour une réponse en plus de 20s
+      }
 
-    this.score = baseScore * timeMultiplier;
+      this.score = baseScore * timeMultiplier;
 
-    // Ajout du score au score total et sauvegarde dans le stockage local
-    this.totalScore += this.score;
-    localStorage.setItem('score', this.score);
-    localStorage.setItem('totalScore', this.totalScore);
-  },
+      // Ajout du score au score total et sauvegarde dans le stockage local
+      this.totalScore += this.score;
+      localStorage.setItem('score', this.score);
+      localStorage.setItem('totalScore', this.totalScore);
+    },
 
     // Gestion du clic sur la carte pour placer le marqueur
     onMapClick(event) {
