@@ -218,7 +218,7 @@ export default {
 
     // Calcul de la distance entre deux coordonnées
     calculateDistance(coord1, coord2) {
-      console.log("Coordonnées point de l'image" + coord2);
+      console.log("Coordonnées image: " + coord2);
       console.log("Coordonnées marqueur" + coord1);
       console.log("Distance sans la racine carrée" + Math.pow(coord2[0] - coord1[0], 2) + Math.pow(coord2[1] - coord1[1], 2));
       return Math.sqrt(Math.pow(coord2[1] - coord1[0], 2) + Math.pow(coord2[0] - coord1[1], 2));
@@ -228,25 +228,31 @@ export default {
     updateScore(distance) {
       console.log(distance);
       let baseScore = 0;
-      const D = 25;
 
-      if (distance > D) {
-        baseScore = 5;
-      } else if (distance > 2 * D) {
-        baseScore = 3;
-      } else if (distance > 3 * D) {
+      if (distance < 0.001) {
+        baseScore = 10;
+      } else if (distance < 0.005) {
+        baseScore = 8;
+      } else if (distance < 0.01) {
+        baseScore = 6;
+      } else if (distance < 0.02) {
+        baseScore = 4;
+      } else if (distance < 0.03) {
+        baseScore = 2;
+      } else if (distance < 0.04) {
         baseScore = 1;
       }
+
 
       let timeMultiplier = 1;
       const timeElapsed = 60 - this.timeRemaining;
 
-      if (timeElapsed <= 5) {
-        timeMultiplier = 4;
-      } else if (timeElapsed <= 10) {
+      if (timeElapsed <= 10) {
+        timeMultiplier = 5;
+      } else if (timeElapsed <= 20) {
+        timeMultiplier = 3;
+      } else if (timeElapsed <= 30) {
         timeMultiplier = 2;
-      } else if (timeElapsed > 20) {
-        timeMultiplier = 1; // Les points ne sont pas acquis pour une réponse en plus de 20s
       }
 
       this.score = baseScore * timeMultiplier;
