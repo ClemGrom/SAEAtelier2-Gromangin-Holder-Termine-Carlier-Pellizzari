@@ -218,7 +218,7 @@ export default {
 
     // Calcul de la distance entre deux coordonnées
     calculateDistance(coord1, coord2) {
-      return Math.sqrt(Math.pow(coord1[0] - coord2[0], 2) + Math.pow(coord1[1] - coord2[1], 2));
+      return Math.sqrt(Math.pow(coord2[0] - coord1[0], 2) + Math.pow(coord2[1] - coord1[1], 2));
     },
 
     // Mise à jour du score en fonction de la distance et du temps restant
@@ -259,6 +259,7 @@ export default {
       this.marker = {
         coordinates: [event.latlng.lat, event.latlng.lng]
       };
+      console.log(this.marker.coordinates);
     },
   },
 };
