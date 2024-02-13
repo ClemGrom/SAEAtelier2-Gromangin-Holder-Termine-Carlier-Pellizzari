@@ -14,7 +14,7 @@
         <!-- <div class="timer">{{ timer }}</div> -->
         <router-link :to="{ path: '/jeu' }" class="continue" >Continuer</router-link>
         <router-link :to="{ path: '/' }">
-           <button><img src="@/assets/quit.svg" alt="Quit" class="quit" /></button>
+           <button class="quit"><img src="@/assets/quit.svg" alt="Quit"/></button>
         </router-link>
        
       </footer>

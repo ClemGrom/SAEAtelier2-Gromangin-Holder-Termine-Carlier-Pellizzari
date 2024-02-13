@@ -22,18 +22,18 @@
       {{ console.log(marker) }}
     </div>
 
-    <router-link :to="{ path: '/FinRound' }" class="custom-button sendButton" @click="checkDistance" :disabled="!marker">
+    <router-link :to="{ path: '/FinRound' }" class="custom-button sendButton" @click="checkDistance" :disabled="!this.marker">
       Envoyer
     </router-link> 
 
-    <div class="timer d-flex align-items-center justify-content-start position-absolute bottom-0 start-0 m-3 p-2 bg-primary text-white rounded shadow">
+    <div class="timer d-flex align-items-center justify-content-start position-absolute bottom-0 start-0 m-3 p-2 bg-custom text-white rounded shadow">
       <button @click="toggleTimer" class="btn btn-light me-2">
         <img src="@/assets/pause.png" alt="pause" class="img-fluid"/>
       </button>
       <h2>Temps restant : {{ timeRemaining }}</h2>
     </div>
 
-    <div class="indice text-center position-absolute bottom-0 start-50 translate-middle-x p-2 bg-primary text-white rounded shadow" v-if="timeRemaining<=30">
+    <div class="indice text-center position-absolute bottom-0 start-50 translate-middle-x p-2 bg-custom text-white rounded shadow" v-if="timeRemaining<=30">
       <p>{{ this.indice }}</p>
     </div>
 
@@ -327,6 +327,10 @@ h2 {
   margin-top: 20px;
 }
 
+.bg-custom {
+  background-color: #2B80B0;
+}
+
 .indice {
   background-color: #2B80B0;
   z-index: 1;
@@ -381,7 +385,8 @@ h2 {
 
 .game-image {
   width: 100%;
-  height: 100%;
+  height: 100vh;
+  object-fit: contain;
   position: relative;
   z-index: 0;
 }
@@ -431,6 +436,10 @@ h2 {
 
 .custom-button:hover {
   background-color: #3fa670;
+}
+
+.sendButton{
+  width: auto;
 }
 
 .modal {
