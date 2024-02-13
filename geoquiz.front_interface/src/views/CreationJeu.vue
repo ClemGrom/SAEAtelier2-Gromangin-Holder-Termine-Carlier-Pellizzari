@@ -1,5 +1,22 @@
 <template>
   <div class="d-flex justify-content-center align-items-center vh-100 bg-custom">
+    <div class="home-container">
+      <nav>
+        <div class="header">
+          <router-link to="/">
+            <img src="@/assets/game_logo.jpg" alt="Game Logo" class="game-logo"/>
+          </router-link>
+          <h1 class="main-title">GeoQuizz</h1>
+        </div>
+        <div class="user-actions">
+          <router-link to="/register" class="cta-button">Inscris-toi ici !</router-link>
+          <router-link to="/login" class="cta-button">Connecte-toi ici!</router-link>
+          <router-link to="/profile" class="profile-link"><img src="@/assets/utilisateur.png" alt="logo utilisateur" class="logo-utilisateur"></router-link>
+        </div>
+      </nav>
+    </div>
+
+
     <div class="row w-100 text-white">
       <h2 class="main-title text-center rounded">Choix de la difficulté : </h2>
       <div class="col-lg-12 d-flex flex-column justify-content-center">
