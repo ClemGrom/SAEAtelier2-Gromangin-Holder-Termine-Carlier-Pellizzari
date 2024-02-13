@@ -193,9 +193,12 @@ export default {
 }
 
 .game-logo {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	position: absolute;
+	top: 0;
+	padding: 10px;
 }
 
 .row {
