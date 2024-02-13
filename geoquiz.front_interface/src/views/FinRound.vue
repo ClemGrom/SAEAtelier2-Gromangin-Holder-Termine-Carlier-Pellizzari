@@ -121,7 +121,12 @@ text-decoration: none;
     }
 
     .quit {
-        height: 30px;
-        margin-left: 20px;
+      height: 30px;
+      margin: auto;
+      text-decoration: none;
+      border: none;
+      background: none;
+      cursor: pointer;
+      outline: none; 
     }
 </style>

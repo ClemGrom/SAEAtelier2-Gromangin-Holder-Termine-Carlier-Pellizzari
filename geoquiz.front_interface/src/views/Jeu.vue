@@ -19,19 +19,21 @@
         <l-tile-layer :url="osmURL"/>
         <l-marker v-if="marker" :lat-lng="marker.coordinates"></l-marker>
       </l-map>
-      <router-link :to="{ path: '/FinRound' }" class="custom-button" @click="checkDistance" :disabled="!marker">
-        Envoyer
-      </router-link>
+      {{ console.log(marker) }}
     </div>
 
-    <div class="timer">
-      <button @click="toggleTimer" class="timer-button">
-        <img src="@/assets/pause.png" alt="pause" class="pause"/>
+    <router-link :to="{ path: '/FinRound' }" class="custom-button sendButton" @click="checkDistance" :disabled="!marker">
+      Envoyer
+    </router-link> 
+
+    <div class="timer d-flex align-items-center justify-content-start position-absolute bottom-0 start-0 m-3 p-2 bg-primary text-white rounded shadow">
+      <button @click="toggleTimer" class="btn btn-light me-2">
+        <img src="@/assets/pause.png" alt="pause" class="img-fluid"/>
       </button>
       <h2>Temps restant : {{ timeRemaining }}</h2>
     </div>
 
-    <div class="indice" v-if="timeRemaining<=30">
+    <div class="indice text-center position-absolute bottom-0 start-50 translate-middle-x p-2 bg-primary text-white rounded shadow" v-if="timeRemaining<=30">
       <p>{{ this.indice }}</p>
     </div>
 
@@ -303,7 +305,7 @@ button {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  padding-right: 10px;
+  margin-right: 20px;
 }
 
 h2 {
@@ -373,6 +375,8 @@ h2 {
 
 .pause {
   transition: transform 0.3s ease;
+  position: absolute;
+  left: 0;
 }
 
 .game-image {
