@@ -4,7 +4,7 @@
       <nav>
         <div class="header">
           <router-link to="/">
-            <img src="@/assets/game_logo.jpg" alt="Game Logo" class="game-logo"/>
+            <img src="@/assets/game_logo.jpg" width="70px" height="70px" alt="Game Logo" class="game-logo"/>
           </router-link>
           <h1 class="main-title">GeoQuizz</h1>
         </div>
