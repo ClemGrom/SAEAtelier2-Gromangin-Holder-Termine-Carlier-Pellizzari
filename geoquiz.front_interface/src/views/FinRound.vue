@@ -130,7 +130,7 @@ text-decoration: none;
     }
 
     .quitImg{
-      height: 50px;
-      width: 50px
+      height: 30px;
+      width: 30px
     }
 </style>

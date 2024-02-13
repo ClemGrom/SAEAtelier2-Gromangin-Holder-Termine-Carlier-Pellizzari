@@ -388,8 +388,8 @@ h2 {
 }
 
 .game-image {
-  width: 100vh;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   position: relative;
   z-index: 0;
