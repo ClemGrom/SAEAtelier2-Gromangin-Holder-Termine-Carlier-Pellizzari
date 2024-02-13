@@ -19,7 +19,9 @@
         <l-tile-layer :url="osmURL"/>
         <l-marker v-if="marker" :lat-lng="marker.coordinates"></l-marker>
       </l-map>
-      <router-link :to="{ path: '/FinRound' }" class="custom-button" @click="checkDistance" :disabled="!marker">Envoyer</router-link>
+      <router-link :to="{ path: '/FinRound' }" class="custom-button" @click="checkDistance" :disabled="!marker">
+        Envoyer
+      </router-link>
     </div>
 
     <div class="timer">
@@ -216,40 +218,46 @@ export default {
 
     // Calcul de la distance entre deux coordonnées
     calculateDistance(coord1, coord2) {
-      return Math.sqrt(Math.pow(coord1[0] - coord2[0], 2) + Math.pow(coord1[1] - coord2[1], 2)) / 2;
+      return Math.sqrt(Math.pow(coord2[1] - coord1[0], 2) + Math.pow(coord2[0] - coord1[1], 2));
     },
 
     // Mise à jour du score en fonction de la distance et du temps restant
     updateScore(distance) {
-    let baseScore = 0;
-    const D = 25;
+      let baseScore = 0;
 
-    if (distance < D) {
-      baseScore = 5;
-    } else if (distance < 2 * D) {
-      baseScore = 3;
-    } else if (distance < 3 * D) {
-      baseScore = 1;
-    }
+      if (distance < 0.001) {
+        baseScore = 10;
+      } else if (distance < 0.005) {
+        baseScore = 8;
+      } else if (distance < 0.01) {
+        baseScore = 6;
+      } else if (distance < 0.02) {
+        baseScore = 4;
+      } else if (distance < 0.03) {
+        baseScore = 2;
+      } else if (distance < 0.04) {
+        baseScore = 1;
+      }
 
-    let timeMultiplier = 1;
-    const timeElapsed = 60 - this.timeRemaining;
 
-    if (timeElapsed <= 5) {
-      timeMultiplier = 4;
-    } else if (timeElapsed <= 10) {
-      timeMultiplier = 2;
-    } else if (timeElapsed > 20) {
-      baseScore = 0; // Les points ne sont pas acquis pour une réponse en plus de 20s
-    }
+      let timeMultiplier = 1;
+      const timeElapsed = 60 - this.timeRemaining;
 
-    this.score = baseScore * timeMultiplier;
+      if (timeElapsed <= 10) {
+        timeMultiplier = 5;
+      } else if (timeElapsed <= 20) {
+        timeMultiplier = 3;
+      } else if (timeElapsed <= 30) {
+        timeMultiplier = 2;
+      }
 
-    // Ajout du score au score total et sauvegarde dans le stockage local
-    this.totalScore += this.score;
-    localStorage.setItem('score', this.score);
-    localStorage.setItem('totalScore', this.totalScore);
-  },
+      this.score = baseScore * timeMultiplier;
+
+      // Ajout du score au score total et sauvegarde dans le stockage local
+      this.totalScore += this.score;
+      localStorage.setItem('score', this.score);
+      localStorage.setItem('totalScore', this.totalScore);
+    },
 
     // Gestion du clic sur la carte pour placer le marqueur
     onMapClick(event) {
