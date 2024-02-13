@@ -4,7 +4,9 @@
          class="game-image"/>
 
     <div class="logo">
-      <img src="@/assets/game_logo.jpg" alt="Game Logo" class="game-logo"/>
+      <RouterLink to="/">
+        <img src="@/assets/game_logo.jpg" alt="Game Logo" class="game-logo"/>
+      </RouterLink>
       <h1>GéoQuizz</h1>
     </div>
 
@@ -54,14 +56,16 @@
 // Import des feuilles de style et des composants Leaflet nécessaires
 import 'leaflet/dist/leaflet.css';
 import {LMap, LMarker, LTileLayer} from '@vue-leaflet/vue-leaflet';
+import { RouterLink } from 'vue-router';
 
 export default {
   name: 'jeu',
   components: {
     LMap,
     LTileLayer,
-    LMarker
-  },
+    LMarker,
+    RouterLink
+},
   data() {
     return {
       // URL du serveur de tuiles OpenStreetMap
@@ -384,7 +388,7 @@ h2 {
 }
 
 .game-image {
-  width: 100%;
+  width: 100vh;
   height: 100vh;
   object-fit: contain;
   position: relative;

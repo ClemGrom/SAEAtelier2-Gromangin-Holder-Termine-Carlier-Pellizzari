@@ -13,8 +13,8 @@
       <img src="@/assets/share.svg" alt="Quit" class="share" />
       <router-link :to="{ path: '/creation-jeu' }" class="restart" @click="resetScoreAndRound">Rejouer</router-link>
       <router-link :to="{ path: '/' }">
-           <button><img src="@/assets/quit.svg" alt="Quit" class="quit" /></button>
-        </router-link>
+        <button class="quit"><img src="@/assets/quit.svg" alt="Quit" class="quitImg"/></button>
+      </router-link>
     </footer>
   </div>
 </template>
@@ -182,7 +182,16 @@ text-decoration: none;
   }
 
   .quit {
-      height: 30px;
-      margin-left: 20px;
+    margin: auto;
+    text-decoration: none;
+    border: none;
+    background: none;
+    cursor: pointer;
+    outline: none; 
+  }
+
+  .quitImg{
+    height: 50px;
+    width: 50px
   }
 </style>
